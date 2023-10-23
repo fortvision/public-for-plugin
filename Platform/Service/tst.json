@@ -1,0 +1,57 @@
+{
+  "cart": {
+    "products": [
+      {
+        "customerProductId": "121",
+        "name": "מנשא לתינוק 4 ב 1 אומני דרים Omni Dream בד נושם Breeze - צבע שחור Ergobaby ארגו",
+        "discountedValue": 1090,
+        "currency": "ILS",
+        "imageUrl": "https://media.istockphoto.com/id/825383494/photo/business-man-pushing-large-stone-up-to-hill-business-heavy-tasks-and-problems-concept.jpg",
+        "productUrl": "https://www.2mybaby.co.il/items/4291070",
+        "volume": 1
+      },
+      {
+        "customerProductId": "122",
+        "name": "מנשא לתינוק 4 ב 1 אומני דרים Omni Dream בד נושם Breeze - צבע שחור Ergobaby ארגו",
+        "discountedValue": 1090,
+        "currency": "ILS",
+        "imageUrl": "https://cdn.create.vista.com/api/media/small/165387948/stock-photo-businessman-looking-at-the-city",
+        "productUrl": "https://www.2mybaby.co.il/items/4291070",
+        "volume": 1
+      },
+      {
+        "customerProductId": "42910702",
+        "name": "123",
+        "discountedValue": 1090,
+        "currency": "ILS",
+        "imageUrl": "https://img.freepik.com/free-photo/joy-sunshine-signing-bargain-urban_1134-964.jpg",
+        "productUrl": "https://www.2mybaby.co.il/items/4291070",
+        "volume": 1
+      }
+    ],
+    "discountedValue": 1090,
+    "volume": 1,
+    "couponId": "",
+    "discountValue": 0,
+    "cmsStatus": "add"
+  },
+  "userInfo": {
+    "userId": "pppp-123",
+    "publisherId": "21443",
+    "firstName": "",
+    "lastName": "",
+    "email": "",
+    "phone": ""
+  },
+  "product": {
+    "customerProductId": "4291070",
+    "name": "מנשא לתינוק 4 ב 1 אומני דרים Omni Dream בד נושם Breeze - צבע שחור Ergobaby ארגו",
+    "discountedValue": 1090,
+    "currency": "ILS",
+    "imageUrl": "https://d3m9l0v76dty0.cloudfront.net/system/photos/7932391/large/0725a80e0b239bbec5da2dd4ccf4212b.jpg",
+    "productUrl": "https://www.2mybaby.co.il/items/4291070",
+    "volume": 1
+  },
+  "volume": 1
+}
+}

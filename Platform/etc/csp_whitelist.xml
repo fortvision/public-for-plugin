@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<csp_whitelist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Csp:etc/csp_whitelist.xsd">
+    <policies>
+        <policy id="frame-src">
+            <values>
+                <value id="frame-fortcdn" type="host">https://fortcdn.com</value>
+                <value id="frame-dev-fortcdn" type="host">*.fortcdn.com</value>
+                <value id="frame-amazonaws" type="host">*.amazonaws.com</value>
+                <value id="frame-fortvision" type="host">*.fortvision.com</value>
+                <value id="frame-dev-fortvision" type="host">https://fbdev.fortvision.com:4443</value>
+            </values>
+        </policy>
+        <policy id="script-src">
+            <values>
+                <value id="script-fv" type="host">https://*.fortvision.net</value>
+                <value id="script-fortcdn" type="host">https://fortcdn.com</value>
+                <value id="script-dev-fortcdn" type="host">*.fortcdn.com</value>
+                <value id="script-amazonaws" type="host">*.amazonaws.com</value>
+                <value id="script-fortvision" type="host">magentotools.fortvision.net</value>
+                <value id="script-fortvision" type="host">*.fortvision.com</value>
+                <value id="script-dev-fortvision" type="host">https://fbdev.fortvision.com:4443</value>
+            </values>
+        </policy>
+        <policy id="connect-src">
+            <values>
+                <value id="connect-fortcdn" type="host">https://fortcdn.com</value>
+                <value id="connect-dev-fortcdn" type="host">*.fortcdn.com</value>
+                <value id="connect-amazonaws" type="host">*.amazonaws.com</value>
+                <value id="connect-fortvisionmagento" type="host">magentotools.fortvision.net</value>
+                <value id="connect-fortvision" type="host">*.fortvision.com</value>
+                <value id="connect-dev-fortvision" type="host">https://fbdev.fortvision.com:4443</value>
+            </values>
+        </policy>
+        <policy id="style-src">
+            <values>
+                <value id="style-fortcdn" type="host">https://fortcdn.com</value>
+                <value id="style-dev-fortcdn" type="host">*.fortcdn.com</value>
+                <value id="style-amazonaws" type="host">*.amazonaws.com</value>
+                <value id="style-fortvision" type="host">*.fortvision.com</value>
+                <value id="style-dev-fortvision" type="host">https://fbdev.fortvision.com:4443</value>
+            </values>
+        </policy>
+        <policy id="font-src">
+            <values>
+                <value id="font-fortcdn" type="host">https://fortcdn.com</value>
+                <value id="font-dev-fortcdn" type="host">*.fortcdn.com</value>
+                <value id="font-amazonaws" type="host">*.amazonaws.com</value>
+                <value id="font-fortvision" type="host">*.fortvision.com</value>
+                <value id="font-dev-fortvision" type="host">https://fbdev.fortvision.com:4443</value>
+            </values>
+        </policy>
+        <policy id="img-src">
+            <values>
+                <value id="img-fortcdn" type="host">https://fortcdn.com</value>
+                <value id="img-dev-fortcdn" type="host">*.fortcdn.com</value>
+                <value id="img-amazonaws" type="host">*.amazonaws.com</value>
+                <value id="img-fortvision" type="host">*.fortvision.com</value>
+                <value id="img-dev-fortvision" type="host">https://fbdev.fortvision.com:4443</value>
+            </values>
+        </policy>
+    </policies>
+</csp_whitelist>

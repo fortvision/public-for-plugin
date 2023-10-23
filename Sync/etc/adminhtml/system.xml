@@ -1,0 +1,108 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Df_Config:etc/system_file.xsd">
+    <system>
+        <section id="fortvision_tutorial" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0"
+                 translate="label">
+        <tab>fortvision</tab>
+        <label>Tutorial</label>
+        <class>separator-top</class>
+        <resource>Fortvision_Sync::tutorial</resource>
+        </section>
+        <section id="fortvision_sync" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0"
+                 translate="label">
+            <tab>fortvision</tab>
+            <label>Sync Settings</label>
+            <class>separator-top</class>
+            <resource>Fortvision_Sync::config</resource>
+
+            <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1"
+                   showInStore="0">
+                <label>General Configuration</label>
+                <field id="is_enabled" translate="label" type="text" sortOrder="10" showInDefault="1"
+                       showInWebsite="1" showInStore="0" canRestore="1">
+                    <label>Enable</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+
+                </field>
+
+                <field id="is_enabled" translate="label" type="select" sortOrder="10" showInDefault="1"
+                       showInWebsite="1" showInStore="0" canRestore="1">
+                    <label>Enable</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="is_enabled" translate="label" type="select" sortOrder="10" showInDefault="1"
+                       showInWebsite="1" showInStore="0" canRestore="1">
+                    <label>Enable</label>
+                    <source_model>\Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="db_host" translate="label" type="text" sortOrder="20" showInDefault="1"
+                       showInWebsite="1" showInStore="0">
+                    <label>DB Host</label>
+                    <depends>
+                        <field id="is_enabled">1</field>
+                    </depends>
+                    <validate>required-entry</validate>
+                </field>
+                <field id="magento_id" translate="label" type="label" sortOrder="20" showInDefault="1"
+                       showInWebsite="1" showInStore="0">
+                    <label>DB Hos2TESTTEST</label>
+
+
+                </field>
+                <field id="db_name" translate="text" type="text" sortOrder="30" showInDefault="1"
+                       showInWebsite="1" showInStore="0">
+                    <label>DB Name</label>
+                    <depends>
+                        <field id="is_enabled">1</field>
+                    </depends>
+                    <validate>required-entry</validate>
+                </field>
+                <field id="db_username" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1"
+                       showInStore="0">
+                    <label>DB Username</label>
+                    <depends>
+                        <field id="is_enabled">1</field>
+                    </depends>
+                    <validate>required-entry</validate>
+                </field>
+                <field id="db_password" translate="label" type="password" sortOrder="50" showInDefault="1"
+                       showInWebsite="1" showInStore="0">
+                    <label>DB Password</label>
+                    <depends>
+                        <field id="is_enabled">1</field>
+                    </depends>
+                    <validate>required-entry</validate>
+                </field>
+                <field id="cron" translate="label comment" type="text" sortOrder="60" showInDefault="1"
+                       showInWebsite="1" showInStore="0" canRestore="1">
+                    <label>Sync Frequency</label>
+                    <script>
+                        <![CDATA[
+                        console.log('hi');
+
+]]>
+
+                    </script>
+                    <comment>
+                        <![CDATA[
+                        <ul class="product-import">
+                            <li>* * * * * command to be executed</li>
+                            <li>| | | | |</li>
+                            <li>| | | | +----- Day of week (0 - 7) (Sunday=0 or 7)</li>
+                            <li>| | | +------- Month (1 - 12)</li>
+                            <li>| | +--------- Day of month (1 - 31)</li>
+                            <li>| +----------- Hour (0 - 23)</li>
+                            <li>+------------- Minute (0 - 59)</li>
+                        </ul>
+                        ]]>
+                    </comment>
+                    <depends>
+                        <field id="is_enabled">1</field>
+                    </depends>
+                    <validate>required-entry</validate>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

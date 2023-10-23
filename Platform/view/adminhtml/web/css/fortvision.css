@@ -1,0 +1,17 @@
+.admin__menu #menu-fortvision-platform-general > a:before {
+    content: url('../images/fortvision.svg');
+    height: 30px;
+    width: 30px;
+    margin: 0 auto;
+}
+
+/*
+.fortvision-tab .admin__page-nav-title strong:before {
+    content: '';
+    background-image: url('../images/fortvision.svg');
+    background-size: auto 22px;
+    background-repeat: no-repeat;
+    padding-left: 25px;
+}
+
+*/

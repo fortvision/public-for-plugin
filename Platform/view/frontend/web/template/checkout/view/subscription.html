@@ -1,0 +1,9 @@
+<!-- ko if: (isAvailable) -->
+<div class="col-mp mp-12">
+    <input type="checkbox" name="fortvision_subscription"
+           data-bind="checked: isChecked, attr: {id: 'fortvision-subscription'}"/>
+    <label data-bind="attr: {for: 'fortvision-subscription'}">
+        <span data-bind="html: checkboxText"></span>
+    </label>
+</div>
+<!-- /ko -->

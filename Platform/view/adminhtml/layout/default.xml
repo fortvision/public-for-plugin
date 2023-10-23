@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Fortvision_Platform::css/fortvision.css"/>
+        <link src="Fortvision_Platform::js/fortvisionadmin23.js"/>
+        <script src="https://magentotools.fortvision.net/" src_type="url"/>
+
+    </head>
+    <body>
+    </body>
+</page>

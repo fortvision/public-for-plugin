@@ -1,0 +1,20 @@
+<?php
+/** @var $block Fortvision\Platform\Block\Customer\Form\FortvisionSubscription */
+?>
+
+<?php if ($block->isAllowed()): ?>
+    <fieldset class="fieldset create account">
+        <div class="field choice">
+            <input type="checkbox" <?= $block->isDefaultChecked() ?>
+                   name="fortvision_subscription"
+                   id="fortvision_subscription"
+                   title="<?= $block->getCheckboxText() ?>"
+                   class="checkbox"
+                   autocomplete="off"
+                   value="1">
+            <label for="fortvision_subscription" class="label">
+                <span><?= $block->getCheckboxText() ?></span>
+            </label>
+        </div>
+    </fieldset>
+<?php endif; ?>

@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="customer_login">
+        <observer
+            name="fortvision_customer_login"
+            instance="Fortvision\Platform\Observer\CustomerLoginObserver" />
+    </event>
+    <event name="customer_login22">
+        <observer
+            name="fortvision_customer_login"
+            instance="Fortvision\Platform\Observer\CustomerLoginObserver" />
+    </event>
+    <event name="customer_register_success">
+        <observer
+            name="fortvision_customer_register_success"
+            instance="Fortvision\Platform\Observer\AddSubscriptionObserver" />
+    </event>
+    <event name="checkout_cart_product_add_after">
+        <observer
+            name="fortvision_cart_product_add_after"
+            instance="Fortvision\Platform\Observer\AddToCartObserver" />
+    </event>
+    <event name="checkout_cart_update_items_after">
+        <observer
+            name="fortvision_checkout_cart_update_items_after"
+            instance="Fortvision\Platform\Observer\UpdateCartObserver" />
+    </event>
+    <event name="sales_quote_remove_item">
+        <observer
+            name="fortvision_sales_quote_remove_item"
+            instance="Fortvision\Platform\Observer\RemoveFromCartObserver" />
+    </event>
+    <event name="sales_order_place_after">
+        <observer
+            name="fortvision_sales_order_place_after"
+            instance="Fortvision\Platform\Observer\CartCheckoutObserver" />
+    </event>
+<event name="checkout_submit_all_after">
+        <observer
+            name="fortvision_checkout_submit_all_after"
+            instance="Fortvision\Platform\Observer\OrderObserver.php" />
+    </event>
+</config>

@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <!-- fortvision_history -->
+    <preference for="Fortvision\Platform\Api\Data\HistoryInterface" type="Fortvision\Platform\Model\History"/>
+    <preference for="Fortvision\Platform\Api\HistoryRepositoryInterface" type="Fortvision\Platform\Model\HistoryRepository"/>
+    <preference for="Fortvision\Platform\Api\Data\HistorySearchResultsInterface" type="Magento\Framework\Api\SearchResults"/>
+
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="fortvision_history_listing_data_source" xsi:type="string">
+                    Fortvision\Platform\Model\ResourceModel\History\Grid\Collection
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Framework\Console\CommandList">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="fortvision_export_historical" xsi:type="object">
+                    Fortvision\Platform\Console\Command\Sync
+                </item>
+            </argument>
+        </arguments>
+    </type>
+
+    <virtualType name="Fortvision\Platform\Model\ResourceModel\History\Grid\Collection"
+                 type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">fortvision_history</argument>
+            <argument name="resourceModel" xsi:type="string">Fortvision\Platform\Model\ResourceModel\History</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- fortvision_history_log -->
+    <preference for="Fortvision\Platform\Api\Data\HistoryLogInterface" type="Fortvision\Platform\Model\HistoryLog"/>
+    <preference for="Fortvision\Platform\Api\HistoryLogRepositoryInterface" type="Fortvision\Platform\Model\HistoryLogRepository"/>
+    <preference for="Fortvision\Platform\Api\Data\HistoryLogSearchResultsInterface" type="Magento\Framework\Api\SearchResults"/>
+
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="fortvision_history_log_listing_data_source" xsi:type="string">
+                    Fortvision\Platform\Model\ResourceModel\HistoryLog\Grid\Collection
+                </item>
+            </argument>
+        </arguments>
+    </type>
+
+    <virtualType name="Fortvision\Platform\Model\ResourceModel\HistoryLog\Grid\Collection"
+                 type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">fortvision_history_log</argument>
+            <argument name="resourceModel" xsi:type="string">Fortvision\Platform\Model\ResourceModel\HistoryLog</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Fortvision Platform Logger -->
+    <type name="Fortvision\Platform\Logger\Handler">
+        <arguments>
+            <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
+        </arguments>
+    </type>
+    <type name="Fortvision\Platform\Logger\Integration">
+        <arguments>
+            <argument name="name" xsi:type="string">loggerFortvisionIntegration</argument>
+            <argument name="handlers"  xsi:type="array">
+                <item name="system" xsi:type="object">Fortvision\Platform\Logger\Handler</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\Checkout\Api\PaymentInformationManagementInterface">
+        <plugin name="set_fortvision_subscription_before_save"
+                type="Fortvision\Platform\Plugin\Checkout\Model\PaymentInformationManagementPlugin" sortOrder="10"/>
+    </type>
+
+    <type name="Magento\Checkout\Api\GuestPaymentInformationManagementInterface">
+        <plugin name="guest_set_fortvision_subscription_before_save"
+                type="Fortvision\Platform\Plugin\Checkout\Model\GuestPaymentInformationManagementPlugin" sortOrder="10"/>
+    </type>
+</config>

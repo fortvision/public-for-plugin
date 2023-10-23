@@ -1,0 +1,22 @@
+<?php
+/** @var $block Fortvision\Platform\Block\Fortvision */
+?>
+
+<script type="application/javascript">
+    window.addEventListener('load', function () {
+        var element = document.createElement('script');
+        element.setAttribute('type', 'application/javascript');
+        element.setAttribute('src', '<?= $block->getJsUrl() ?>');
+        element.setAttribute('publisher_id', '<?= $block->getPublisherId() ?>');
+        element.setAttribute('async', '');
+        document.body.appendChild(element);
+    });
+</script>
+
+<script type="text/x-magento-init">
+{
+    "*": {
+        "Fortvision_Platform/js/fortvision" : {}
+    }
+}
+</script>

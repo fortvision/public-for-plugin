@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Df_Config:etc/system_file.xsd">
+    <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    </page>
+    <system>
+        <tab id="fortvision" sortOrder="999" translate="label" class="fortvision-tab fortvision-top">
+            <label>Fortvision</label>
+        </tab>
+        <section id="fortvision_platform" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0" translate="label">
+            <tab>fortvision</tab>
+            <label>Platform Settings</label>
+            <class>fortvision</class>
+            <resource>Fortvision_Platform::config</resource>
+
+            <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1"
+                   showInStore="0">
+                <label>Fortvision Configuration</label>
+                <attribute type="expanded">1</attribute>
+                <field id="is_enabled" translate="label" type="select" sortOrder="10" showInDefault="1"
+                       showInWebsite="1" showInStore="0" canRestore="1">
+                    <label>Enable</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+
+
+                <field id="magento_id" translate="label" type="label" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <depends>
+                        <field id="is_enabled">1</field>
+                    </depends>
+                </field>
+            </group>
+
+        </section>
+    </system>
+</config>

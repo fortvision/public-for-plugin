@@ -1,0 +1,121 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Df_Config:etc/system_file.xsd">
+    <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+        <script language="JavaScript" src="343" ></script>
+        <head>
+            <link src="Fortvision_Platform::js/yourjs.js"/>
+        </head>
+    </page>
+    <system>
+        <tab id="fortvision" sortOrder="999" translate="label" class="fortvision-tab">
+            <label>Fortvision</label>
+        </tab>
+        <section id="fortvision_platform" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0" translate="label">
+            <tab>fortvision</tab>
+            <label>Platform Settings</label>
+            <class>separator-top</class>
+            <resource>Fortvision_Platform::config</resource>
+            <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1"
+                   showInStore="0">
+                <label>General Configuration</label>
+                <attribute type="expanded">1</attribute>
+                <field id="is_enabled" translate="label" type="select" sortOrder="10" showInDefault="1"
+                       showInWebsite="1" showInStore="0" canRestore="1">
+                    <label>Enable</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="publisher" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1"
+                       showInStore="0">
+                    <label>Site AAAID </label>
+                    <depends>
+                        <field id="is_enabled">1</field>
+                    </depends>
+                    <validate>required-entry</validate>
+                </field>
+
+                <field id="develop_mode" translate="label" type="select" sortOrder="50" showInDefault="1"
+                       showInWebsite="1" showInStore="0">
+                    <label>Develop Mode</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="is_enabled">1</field>
+                    </depends>
+                </field>
+                <field id="ssl_verify" translate="label" type="select" sortOrder="60" showInDefault="1"
+                       showInWebsite="1" showInStore="0">
+                    <label>SSL Verify</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="is_enabled">1</field>
+                    </depends>
+                </field>
+                <field id="debug_mode" translate="label" type="select" sortOrder="90" showInDefault="1"
+                       showInWebsite="1" showInStore="0">
+                    <label>Debug Mode</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="is_enabled">1</field>
+                    </depends>
+                </field>
+            </group>
+            <group id="events" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1"
+                   showInStore="0">
+                <label>Export Events</label>
+                <attribute type="expanded">1</attribute>
+                <field id="customer_login" translate="label" type="select" sortOrder="10" showInDefault="1"
+                       showInWebsite="1" showInStore="0" canRestore="1">
+                    <label>Customer Login Enable</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="cart_management" translate="label" type="select" sortOrder="20" showInDefault="1"
+                       showInWebsite="1" showInStore="0" canRestore="1">
+                    <label>Cart Management Enable</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <depends>
+                    <field id="fortvision_platform/general/is_enabled">1</field>
+                </depends>
+            </group>
+            <group id="marketing" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1"
+                   showInStore="0">
+                <label>Marketing Activity Setup</label>
+                <attribute type="expanded">1</attribute>
+                <comment>FORTVISION can manage your subscription list by adding a checkbox to the pages you choose, or you can use your own checkbox.</comment>
+
+                <field id="pages" translate="label" type="select" sortOrder="10" showInDefault="1"
+                       showInWebsite="1" showInStore="0">
+                    <label>Which pages?</label>
+                    <source_model>Fortvision\Platform\Model\Config\Source\Pages</source_model>
+                </field>
+                <field id="checkbox_text" translate="label" type="textarea" sortOrder="20" showInDefault="1"
+                       showInWebsite="1" showInStore="0">
+                    <label>Checkbox Text</label>
+                    <depends>
+                        <field id="pages" separator=",">signup,checkout,both</field>
+                    </depends>
+                </field>
+                <field id="checkbox_location" translate="label" type="select" sortOrder="20" showInDefault="1"
+                       showInWebsite="1" showInStore="0">
+                    <label>Checkbox Location</label>
+                    <source_model>Fortvision\Platform\Model\Config\Source\CheckboxLocation</source_model>
+                    <depends>
+                        <field id="pages" separator=",">checkout,both</field>
+                    </depends>
+                </field>
+                <field id="default_checked" translate="label" type="select" sortOrder="30" showInDefault="1"
+                       showInWebsite="1" showInStore="0">
+                    <label>Checked On Default</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="pages" separator=",">signup,checkout,both</field>
+                    </depends>
+                </field>
+                <depends>
+                    <field id="fortvision_platform/general/is_enabled">1</field>
+                </depends>
+            </group>
+        </section>
+    </system>
+</config>

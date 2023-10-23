@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Fortvision_Platform::general"
+             title="Fortvision"
+             module="Fortvision_Platform"
+             resource="Fortvision_Platform::general"
+             sortOrder="20"
+             translate="title"
+
+        />
+
+        <add id="Fortvision_Platform::configuration"
+             title="Platform Settings"
+             module="Fortvision_Platform"
+             sortOrder="20"
+             translate="title"
+             parent="Fortvision_Platform::general"
+             action="adminhtml/system_config/edit/section/fortvision_platform"
+             resource="Fortvision_Platform::configuration"/>
+
+
+
+    </menu>
+</config>
