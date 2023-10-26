@@ -4,6 +4,7 @@ namespace Fortvision\Platform\Logger;
 
 use Monolog\Logger;
 use Fortvision\Platform\Provider\GeneralSettings;
+use Fortvision\Platform\Service\MainVision;
 
 /**
  * Class Integration
@@ -15,6 +16,7 @@ class Integration extends Logger
      * @var GeneralSettings
      */
     protected $generalSettings;
+    protected $mainVision;
 
     /**
      * Integration constructor.
@@ -30,6 +32,7 @@ class Integration extends Logger
         $processors = []
     ) {
         $this->generalSettings = $generalSettings;
+      //  $this->mainVision = $mainVision;
         parent::__construct($name, $handlers, $processors);
     }
 

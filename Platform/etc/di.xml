@@ -32,6 +32,8 @@
         </arguments>
     </virtualType>
 
+
+
     <!-- fortvision_history_log -->
     <preference for="Fortvision\Platform\Api\Data\HistoryLogInterface" type="Fortvision\Platform\Model\HistoryLog"/>
     <preference for="Fortvision\Platform\Api\HistoryLogRepositoryInterface" type="Fortvision\Platform\Model\HistoryLogRepository"/>
@@ -47,6 +49,8 @@
         </arguments>
     </type>
 
+
+
     <virtualType name="Fortvision\Platform\Model\ResourceModel\HistoryLog\Grid\Collection"
                  type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
         <arguments>
@@ -61,6 +65,8 @@
             <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
         </arguments>
     </type>
+
+
     <type name="Fortvision\Platform\Logger\Integration">
         <arguments>
             <argument name="name" xsi:type="string">loggerFortvisionIntegration</argument>
@@ -79,4 +85,15 @@
         <plugin name="guest_set_fortvision_subscription_before_save"
                 type="Fortvision\Platform\Plugin\Checkout\Model\GuestPaymentInformationManagementPlugin" sortOrder="10"/>
     </type>
+
+    <virtualType name="fortVisionDto" type="Fortvision\Platform\Model\Api\DTO\Product" />
+    <virtualType name="FortvisionGeneralSettings" type="Fortvision\Platform\Provider\GeneralSettings" />
+    <virtualType name="FortvisionMainVision" type="Fortvision\Platform\Service\MainVision" />
+
+
+    <type name="Fortvision\Platform\Service\MainVision">
+        <arguments>
+        </arguments>
+    </type>
+
 </config>

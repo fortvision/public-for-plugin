@@ -6,6 +6,7 @@ use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Store\Model\ResourceModel\Website\CollectionFactory as WebsiteCollectionFactory;
 use Magento\Framework\FlagManager;
+use Fortvision\Platform\Service\MainVision;
 
 /**
  * Class GeneralSettings
@@ -47,7 +48,10 @@ class GeneralSettings
     public function __construct(
         ScopeConfigInterface     $scopeConfig,
         WebsiteCollectionFactory $websiteCollectionFactory,
+        // MainVision $mainVision,
+
         FlagManager                       $flagManager,
+
 
     )
     {

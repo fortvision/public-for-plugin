@@ -75,6 +75,22 @@ class Cart
      * @return array
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
+    public function getHistData($order)
+    {
+
+        $websitesids=$order->getWebSiteIds();
+        $payload=['status'=>$order->getStatus(),'websitesids'=>$websitesids];
+        return $payload;
+
+
+    }
+
+    /**
+     * @param CartInterface $quote
+     * @param string $status
+     * @return array
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
     public function getCartData(CartInterface $quote, $status = '')
     {
         $quote->collectTotals()->setTotalsCollectedFlag(false);

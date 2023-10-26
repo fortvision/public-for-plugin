@@ -75,6 +75,25 @@ class Customer
      * @param CustomerInterface $customer
      * @return array
      */
+    public function getHistInfoData(CustomerInterface $customer) {
+        $userInfo = [
+           /// 'publisherId' => (string) $this->generalSettings->getPublisher(),
+           // 'userId' => (string) $this->cookieManager->getCookie('fortvision_uuid'),
+            'firstName' => (string) $customer->getFirstname(),
+            'lastName' => (string) $customer->getLastname(),
+            'email' => (string) $customer->getEmail(),
+          //  'isLoggedIn' => (int) $this->customerSession->isLoggedIn()
+
+        ];
+
+        return $userInfo;
+    }
+
+    public function getHistData($customer) {
+        $websitesids=$customer->getWebsiteIds();
+        $payload=['email'=>$customer->getEmail(),'$websitesids'=>$websitesids];
+        return $payload;
+    }
     public function getUserInfoData(CustomerInterface $customer)
     {
         $userInfo = [

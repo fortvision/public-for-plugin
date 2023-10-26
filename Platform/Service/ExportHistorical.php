@@ -5,7 +5,7 @@ namespace Fortvision\Platform\Service;
 
 /**
  * Class Sync
- * @package Fortvision\Sync\Service
+ * @package Fortvision\Platform\Service
  */
 
 
@@ -26,17 +26,17 @@ class ExportHistorical
     protected $storeManager;
 
     public function __construct(
-        GeneralSettings $generalSettings,
-        CategoryRepositoryInterface $categoryRepository,
-        ProductRepositoryInterface $productRepository,
-        StoreManagerInterface $storeManager,
+    //    GeneralSettings $generalSettings,
+    //    CategoryRepositoryInterface $categoryRepository,
+     //   ProductRepositoryInterface $productRepository,
+     //   StoreManagerInterface $storeManager,
 
     )
     {
-        $this->generalSettings = $generalSettings;
-        $this->categoryRepository = $categoryRepository;
-        $this->productRepository = $productRepository;
-        $this->storeManager = $storeManager;
+      //  $this->generalSettings = $generalSettings;
+       /// $this->categoryRepository = $categoryRepository;
+       // $this->productRepository = $productRepository;
+       // $this->storeManager = $storeManager;
     }
 
     public function process()
