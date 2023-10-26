@@ -6,6 +6,7 @@ use Fortvision\Platform\Helper\Data;
 use Fortvision\Platform\Provider\GeneralSettings;
 use Magento\Framework\Stdlib\DateTime\DateTime;
 use Magento\Quote\Api\Data\CartInterface;
+use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Store\Model\StoreManagerInterface;
 
 /**
@@ -75,13 +76,17 @@ class Cart
      * @return array
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function getHistData($order)
+    public function getHistData(OrderInterface $order)
     {
 
-        $websitesids=$order->getWebSiteIds();
-        $payload=['status'=>$order->getStatus(),'websitesids'=>$websitesids];
+       $siteid= $order->getStore()->getWebsiteId();
+        $payload=['status'=>$order->getStatus(),'websitesids'=>[$siteid]];
+        $payload['discountedValue'] = (float) $order->getBaseGrandTotal();
+        $payload['volume'] = (int) $order->getItemsQty();
+        $payload['couponId'] = (string) $order->getCouponCode();
+        $payload['discountValue'] = (float) abs($order->getBaseSubtotalWithDiscount() - $order->getBaseSubtotal());
+        $payload['cmsStatus'] = (string) $order->getStatus();
         return $payload;
-
 
     }
 
@@ -100,7 +105,6 @@ class Cart
         foreach ($cartItems as $cartItem) {
             $cartData['products'][] = $this->productDto->getProductData($cartItem);
         }
-
         $quote->collectTotals();
         $cartData['discountedValue'] = (float) $quote->getBaseGrandTotal();
         $cartData['volume'] = (int) $quote->getItemsQty();

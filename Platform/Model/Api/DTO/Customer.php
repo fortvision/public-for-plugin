@@ -90,8 +90,15 @@ class Customer
     }
 
     public function getHistData($customer) {
-        $websitesids=$customer->getWebsiteIds();
-        $payload=['email'=>$customer->getEmail(),'$websitesids'=>$websitesids];
+        $websitesids=$customer->getStore()->getWebsiteId();
+        echo("!!!!!: CUSTOMER".$websitesids);
+        $payload = ['email' => $customer->getEmail(), '$websitesids' => [$websitesids],
+        'firstName'=>(string) $customer->getFirstname(),
+        'lastName'=>(string) $customer->getLastname(),
+        ];
+      //  $payload['firstName'] => ;
+     //   $payload['lastName'] => (string) $customer->getFirstname();
+
         return $payload;
     }
     public function getUserInfoData(CustomerInterface $customer)

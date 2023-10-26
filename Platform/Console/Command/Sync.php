@@ -30,7 +30,6 @@ class Sync extends Command
     protected $sync;
     protected string $routUrl = 'https://smc2t4kcbb.execute-api.eu-west-1.amazonaws.com/1/plugin/aggregate';
     protected string $magentoHelperUrl = 'https://magentotools.fortvision.net';
-
     protected $logger;
     protected $mainVisionService;
     protected $magentoId;
@@ -134,16 +133,19 @@ class Sync extends Command
                 $websiteCustomers = array_values(array_filter($customers, function ($line) use ($websiteCode) {
                     return isset($line['websitesids']) && in_array($websiteCode, $line['websitesids']);
                 }));
-                $resres1 = $this->sendRequest('products', $websiteProducts, ["mode" => 'base', 'publisherId' => $publisherId]);
-                if ($websiteOrders && count($websiteOrders) > 0) {
-
-                    $resres2 = $this->sendRequest('orders', $websiteOrders, ["mode" => 'base', 'publisherId' => $publisherId]);
-                    echo("SYNC O RES " . json_encode($resres2));
+                if ($websiteProducts && count($websiteProducts)>0) {
+                    $resres1 = $this->sendRequest('products', $websiteProducts, ["mode" => 'base', 'publisherId' => $publisherId]);
+                  //  echo("SYNC O HIST " . json_encode($resres1));
                 }
-                $resres3 = $this->sendRequest('customers', $websiteCustomers, ["mode" => 'base', 'publisherId' => $publisherId]);
-                //   echo("SYNC P RES ".json_encode($resres1));
+                if ($websiteOrders && count($websiteOrders) > 0) {
+                    $resres2 = $this->sendRequest('orders', $websiteOrders, ["mode" => 'base', 'publisherId' => $publisherId]);
+                //    echo("SYNC O RES " . json_encode($resres2));
+                }
+                if ($websiteCustomers && count($websiteCustomers)>0) {
+                    $resres3 = $this->sendRequest('customers', $websiteCustomers, ["mode" => 'base', 'publisherId' => $publisherId]);
+                    echo("SYNC C RES " . json_encode($resres3));
+                }
 
-                //   echo("SYNC C RES ".json_encode($resres3));
             }
 
             $output->writeln('<info>Sync DB has been finished</info>');
