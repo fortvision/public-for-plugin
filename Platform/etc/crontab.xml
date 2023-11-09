@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
     <group id="fortvision">
-        <job instance="Fortvision\Platform\Cron\Sync" method="execute" name="fortvision_sync">
+        <job name="fortvision_sync" instance="Fortvision\Platform\Cron\Sync" method="execute" >
             <schedule>* * * * *</schedule>
         </job>
     </group>

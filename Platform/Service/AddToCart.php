@@ -2,6 +2,7 @@
 
 namespace Fortvision\Platform\Service;
 
+use Fortvision\Platform\Model\Api\DTO\Cart as OrderDTO;
 use Fortvision\Platform\Model\Api\DTO\Cart as CartDTO;
 use Fortvision\Platform\Model\Api\DTO\Customer as CustomerDTO;
 use Fortvision\Platform\Model\Api\DTO\Product as ProductDTO;
@@ -16,6 +17,8 @@ use Magento\Framework\Serialize\Serializer\Json;
 use Magento\Framework\Webapi\Rest\Request;
 use Magento\Quote\Api\Data\CartInterface;
 use Magento\Quote\Api\Data\CartItemInterface;
+use Fortvision\Platform\Logger\Integration as LoggerIntegration;
+
 
 /**
  * Class AddToCart
@@ -26,6 +29,9 @@ class AddToCart
 {
     const ADD_TO_CART_ENDPOINT = '/cart-management/product/add';
     const ENDPOINT = self::ADD_TO_CART_ENDPOINT;
+    const ENDPOINT_REMOVE = '/cart-management/product/remove';
+    const ENDPOINT_CHECKOUT = '/cart/checkout';
+    const ENDPOINT_CART_STATUS = '/cart-management/cart/status';
 
 
     /**
@@ -73,6 +79,7 @@ class AddToCart
      */
     protected $json;
     protected $generalSettings;
+    private CartDTO $orderDTO;
 
     /**
      * AddToCart constructor.
@@ -89,18 +96,20 @@ class AddToCart
         HttpClient $httpClient,
         HistoryProcess $processHistory,
         GeneralSettings $generalSettings,
+        OrderDTO $orderDTO,
 
         CartDTO $cartDto,
         ProductDTO $productDto,
         CustomerDTO $customerDto,
         HistoryFactory $historyFactory,
-        \Psr\Log\LoggerInterface $logger,
+        LoggerIntegration $logger,
 
         HistoryRepository $historyRepository,
         Json $json
     ) {
         $this->httpClient = $httpClient;
         $this->generalSettings = $generalSettings;
+        $this->orderDTO = $orderDTO;
 
         $this->processHistory = $processHistory;
         $this->cartDto = $cartDto;
@@ -126,15 +135,130 @@ class AddToCart
             Request::HTTP_METHOD_PUT
         );
         $result = $response->getBody()->getContents();
+        return $result;
     }
 
     /**
      * @param $quote
      * @param $item
      */
-    public function execute(CartInterface $quote, CartItemInterface $item)
+    public function changeAmount(CartInterface $quote, CartItemInterface $item)
     {
+        /**
+         * @param $quote
+         * @param $item
+         */
+        // $this->_logger->debug("changeAmount");
 
+        $customer = $quote->getCustomer();
+        if (!$customer->getId()) {
+            $customer->setEmail($quote->getCustomerEmail());
+            $customer->setFirstname($quote->getCustomerFirstname());
+            $customer->setLastname($quote->getCustomerLastname());
+        }
+
+        $action=false;
+        $prevQtyData = $item->getOrigData();
+        $prevQty=false;
+        $new = $item->getData()['qty'] ;
+
+        if ($prevQtyData) {
+            $prevQty = $prevQtyData['qty'];
+            if (intval($prevQty)>intval($new)) $action='remove';
+            if (intval($prevQty)<intval($new)) $action='add';
+        }
+        if (!$action) return;
+        $this->_logger->debug("changeAm ".$new." ".$prevQty." ".$action);
+
+
+        $url = \Magento\Framework\App\ObjectManager::getInstance()->get('Magento\Framework\UrlInterface');
+        $cartData['endpoint'] = $action==='add'?self::ENDPOINT:self::ENDPOINT_REMOVE;
+
+        $cartData['kind'] = $action==='add'?Action::ADD_TO_CART:Action::REMOVE_FROM_CART;
+      //  echo( $cartData['endpoint']." ".$cartData['kind']);
+
+        $cartData['magento_id'] = $this->generalSettings->getMagentoId();
+        $cartData['hostURL'] = $_SERVER['HTTP_HOST'];
+        $cartData['cart'] = $this->cartDto->getCartData($quote, 'change');
+        $cartData['product'] = $this->productDto->getProductData($item);
+        $cartData['userInfo'] = $this->customerDto->getUserInfoData($customer);
+        $cartData['volume'] = $quote->getItemsQty();
+        $this->_logger->debug(json_encode($cartData));
+       // echo('-----'.json_encode($cartData).'---');
+        $this->process(json_encode($cartData));
+
+    }
+
+
+    /**
+     * @param CartInterface $quote
+     * @param CartItemInterface $item
+     */
+    public function updateCart(CartInterface $quote)
+    {
+        $this->_logger->debug("updateCart");
+
+       // echo('1111updateCart1');
+        /**
+         * @param CartInterface $quote
+         * @param CartItemInterface $item
+         */
+    }
+
+    public function parseCheckoutOrder($orderId) {
+        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+
+        $order = $objectManager->create('\Magento\Sales\Model\OrderRepository')->get($orderId);
+        $payload = $this->orderDTO->getHistData($order);
+        $cartData['kind'] = Action::CART_CHECKOUT;
+        $cartData['endpoint'] = self::ENDPOINT_CHECKOUT;
+        $cartData['hostURL'] = $_SERVER['HTTP_HOST'];
+        $cartData['checkout'] = $payload;
+        $this->process(json_encode($cartData));
+       // $cartData['userInfo'] = $this->customerDto->getUserInfoData($customer);
+
+    }
+
+    public function removeFromCart(CartInterface $quote, CartItemInterface $item)
+    {
+        $this->_logger->debug("removeFromCart");
+
+        try {
+            $quote->collectTotals();
+            $customer = $quote->getCustomer();
+
+            if (!$customer->getId()) {
+                $customer->setEmail($quote->getCustomerEmail());
+                $customer->setFirstname($quote->getCustomerFirstname());
+                $customer->setLastname($quote->getCustomerLastname());
+            }
+            $url = \Magento\Framework\App\ObjectManager::getInstance()->get('Magento\Framework\UrlInterface');
+            $cartData['kind'] = Action::REMOVE_FROM_CART;
+            $cartData['endpoint'] = self::ENDPOINT;
+            $cartData['hostURL'] = $_SERVER['HTTP_HOST'];
+            $cartData['cart'] = $this->cartDto->getCartData($quote, 'remove');
+            $cartData['product'] = $this->productDto->getProductData($item);
+            $cartData['userInfo'] = $this->customerDto->getUserInfoData($customer);
+            $this->process(json_encode($cartData));
+
+            /*
+            $modelData = $this->json->serialize($cartData);
+            $history = $this->historyFactory->create();
+            $history->setStatus(Status::PENDING)
+                ->setAction(Action::REMOVE_FROM_CART)
+                ->setServiceClass(RemoveFromCart::class)
+                ->setEntityData($modelData);
+            $history = $this->historyRepository->save($history);
+            $this->processHistory->processById($history->getHistoryId());*/
+        } catch (\Exception $e) {
+            $this->_logger->debug("removeFromCart".$e->getMessage());
+        }
+    }
+
+    public function addToCart(CartInterface $quote, CartItemInterface $item)
+    {
+     //   echo('addtocart')
+        $this->_logger->debug('addToCart');
         try {
             $customer = $quote->getCustomer();
             if (!$customer->getId()) {
@@ -144,8 +268,10 @@ class AddToCart
             }
 
             $url = \Magento\Framework\App\ObjectManager::getInstance()->get('Magento\Framework\UrlInterface');
-            $cartData['kind'] = Action::ADD_TO_CART;
             $cartData['endpoint'] = self::ENDPOINT;
+
+            $cartData['kind'] = Action::ADD_TO_CART;
+
             $cartData['magento_id'] = $this->generalSettings->getMagentoId();
             $cartData['hostURL'] = $_SERVER['HTTP_HOST'];
             $cartData['cart'] = $this->cartDto->getCartData($quote, 'add');
@@ -162,7 +288,8 @@ class AddToCart
             $history = $this->historyRepository->save($history);
             $this->processHistory->processById($history->getHistoryId());
         } catch (\Exception $e) {
-            echo($e->getMessage());
+            $this->_logger->debug("addToCartException".$e->getMessage());
+
         }
     }
 }

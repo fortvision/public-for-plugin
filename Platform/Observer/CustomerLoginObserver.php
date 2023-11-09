@@ -43,10 +43,10 @@ class CustomerLoginObserver implements ObserverInterface
     public function execute(Observer $observer)
     {
         if (!$this->generalSettings->customerLoginEnabled()) {
-            return $this;
+        //    return $this;
         }
         $customer = $observer->getEvent()->getCustomer()->getDataModel();
-        $this->customerLogin->execute($customer);
+        $this->customerLogin->customerLogin($customer);
         return $this;
     }
 }

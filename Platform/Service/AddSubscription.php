@@ -12,6 +12,7 @@ use Fortvision\Platform\Model\Rest\HttpClient;
 use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Framework\Serialize\Serializer\Json;
 use Magento\Framework\Webapi\Rest\Request;
+use Fortvision\Platform\Logger\Integration as LoggerIntegration;
 
 /**
  * Class AddSubscription

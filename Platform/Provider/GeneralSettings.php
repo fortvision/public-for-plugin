@@ -66,6 +66,7 @@ class GeneralSettings
      */
     public function isModuleEnabled()
     {
+        return true;
         return $this->scopeConfig->isSetFlag(
             self::XML_PATH_GENERAL_MODULE_ENABLE,
             ScopeInterface::SCOPE_WEBSITE

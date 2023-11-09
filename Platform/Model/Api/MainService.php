@@ -164,6 +164,26 @@ class MainService
             ->load();
     }
 
+
+    public function addUser($email) {
+        $customer   = $this->_customerFactory->create();
+
+        $customer->setWebsiteId(1);
+        $customer->setEmail($email);
+       // $this->logger->debug('addcustome3');
+       // $this->logger->debug('addcustome3:');
+
+        $customer->setFirstname("wdewewe");
+        $customer->setLastname("ewrewqrw");
+        $customer->setPassword("password");
+        $customer->setConfirmation(null);
+        $customer->setForceConfirmed(true);
+        $customer->setForceConfirmed(true);
+        $customer->save();
+        $customer->sendNewAccountEmail();
+        echo('wew-9');
+
+    }
     public function getAllCustomers()
     {
 
@@ -191,7 +211,7 @@ class MainService
 
 
     /**
-     * @return \Magento\Cms\Model\Block|null
+     * @return @mixed
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function getAllProducts()
@@ -219,9 +239,6 @@ class MainService
         }
         return $result;
     }
-
-
-
 
 
     public function getMagentoWebsites()

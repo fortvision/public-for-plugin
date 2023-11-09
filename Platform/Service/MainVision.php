@@ -82,6 +82,13 @@ class MainVision // extends Action
     /**
      * @return string
      */
+    public function forceSync()
+    {
+
+    }
+    /**
+     * @return string
+     */
     public function forceExport()
     {
         $result = $this->getProductData();

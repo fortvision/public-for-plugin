@@ -3,7 +3,9 @@
 namespace Fortvision\Platform\Observer;
 
 use Fortvision\Platform\Provider\GeneralSettings;
-use Fortvision\Platform\Service\AddSubscription;
+//use Fortvision\Platform\Service\AddSubscription;
+use Fortvision\Platform\Service\CustomerLogin;
+
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
@@ -14,10 +16,8 @@ use Magento\Framework\Event\ObserverInterface;
  */
 class AddSubscriptionObserver implements ObserverInterface
 {
-    /**
-     * @var AddSubscription
-     */
-    protected $addSubscription;
+
+  //  protected $addSubscription;
 
     /**
      * @var GeneralSettings
@@ -28,19 +28,23 @@ class AddSubscriptionObserver implements ObserverInterface
      * @var RequestInterface
      */
     protected $request;
+    private CustomerLogin $customerLogin;
 
     /**
      * AddSubscriptionObserver constructor.
-     * @param AddSubscription $addSubscription
      * @param GeneralSettings $generalSettings
      * @param RequestInterface $request
      */
     public function __construct(
-        AddSubscription $addSubscription,
+        CustomerLogin $customerLogin,
+
+      //  AddSubscription $addSubscription,
         GeneralSettings $generalSettings,
         RequestInterface $request
     ) {
-        $this->addSubscription = $addSubscription;
+       // $this->addSubscription = $addSubscription;
+        $this->customerLogin = $customerLogin;
+
         $this->generalSettings = $generalSettings;
         $this->request = $request;
     }
@@ -52,13 +56,15 @@ class AddSubscriptionObserver implements ObserverInterface
     public function execute(Observer $observer)
     {
         if (!$this->generalSettings->customerLoginEnabled()) {
-            return $this;
+           // return $this;
         }
 
-        if ($this->request->getParam('fortvision_subscription')) {
+       // if ($this->request->getParam('fortvision_subscription')) {
             $customer = $observer->getEvent()->getCustomer();
-            $this->addSubscription->execute($customer);
-        }
+
+          //  $this->addSubscription->execute($customer);
+            $this->customerLogin->addSubscription($customer);
+      //  }
         return $this;
     }
 }

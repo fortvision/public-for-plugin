@@ -12,6 +12,12 @@
             <resource ref="anonymous"/>
         </resources>
     </route>
+    <route method="GET" url="/V1/fortvision/forceSync/">
+        <service class="Fortvision\Platform\Service\MainVision" method="forceSync"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
     <route method="GET" url="/V1/fortvision/forceExport/">
         <service class="Fortvision\Platform\Service\MainVision" method="forceExport"/>
         <resources>

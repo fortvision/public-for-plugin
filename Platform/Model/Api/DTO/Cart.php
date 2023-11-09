@@ -79,13 +79,37 @@ class Cart
     public function getHistData(OrderInterface $order)
     {
 
+        $pids=$order->getItems();
+        $products=[];
+        $totalVolume=0;
+        foreach ($pids as $pid) {
+            $payload= $this->productDto->getProductDataById($pid->getProductId());
+            $payload['volume']=$pid->getQtyOrdered();
+            $totalVolume+= $payload['volume'];
+//echo("PP".json_encode($payload));
+            $products[]=$payload;
+
+  //         echo("P)))-1:".$pid->getProductId()."\n");
+           //echo("P)))-2:".."\n");
+        }
+     //   echo("PIDS".json_encode($pids)."\n");
        $siteid= $order->getStore()->getWebsiteId();
         $payload=['status'=>$order->getStatus(),'websitesids'=>[$siteid]];
+        $payload['products'] = $products;
         $payload['discountedValue'] = (float) $order->getBaseGrandTotal();
-        $payload['volume'] = (int) $order->getItemsQty();
+        $payload['volume'] = (int) $totalVolume;
+        $payload['customer_id'] = (int) $order->getCustomerId();
         $payload['couponId'] = (string) $order->getCouponCode();
+      //  $payload['product'] =  $order->getItems();
         $payload['discountValue'] = (float) abs($order->getBaseSubtotalWithDiscount() - $order->getBaseSubtotal());
         $payload['cmsStatus'] = (string) $order->getStatus();
+     //   $cartItems = $order->getAllVisibleItems() ?? [];
+       // $payload['products'] = [];
+    //    foreach ($cartItems as $cartItem) {
+      //      $payload['products'][] ='';// $this->productDto->getProductDataFromItem($cartItem);
+      //  }
+       // var_dump($order->getItems());
+        echo(json_encode($payload)."\n\n");
         return $payload;
 
     }

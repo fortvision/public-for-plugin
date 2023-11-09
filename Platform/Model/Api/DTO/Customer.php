@@ -45,6 +45,9 @@ class Customer
      * @var Session
      */
     protected $customerSession;
+    protected $addressRepository;
+    private \Magento\Framework\ObjectManagerInterface $_objectManager;
+    private \Magento\Customer\Api\CustomerRepositoryInterface $customerRepository;
 
     /**
      * Customer constructor.
@@ -61,6 +64,9 @@ class Customer
         StoreManagerInterface $storeManager,
         Data $helper,
         CookieManagerInterface $cookieManager,
+        \Magento\Framework\ObjectManagerInterface $objectManager,
+        \Magento\Customer\Api\CustomerRepositoryInterface $customerRepository,
+        \Magento\Customer\Api\AddressRepositoryInterface $addressRepository,
         Session $customerSession
     ) {
         $this->generalSettings = $generalSettings;
@@ -69,7 +75,15 @@ class Customer
         $this->helper = $helper;
         $this->cookieManager = $cookieManager;
         $this->customerSession = $customerSession;
+        $this->_objectManager = $objectManager;
+
+        $this->addressRepository = $addressRepository;
+        $this->customerRepository = $customerRepository;
+//            $this->_objectManager->create(
+//            \Magento\Customer\Api\AddressRepositoryInterface::class
+//        );
     }
+
 
     /**
      * @param CustomerInterface $customer
@@ -91,11 +105,26 @@ class Customer
 
     public function getHistData($customer) {
         $websitesids=$customer->getStore()->getWebsiteId();
-        echo("!!!!!: CUSTOMER".$websitesids);
-        $payload = ['email' => $customer->getEmail(), '$websitesids' => [$websitesids],
+
+        $customerData = $this->customerRepository->getById( $customer->getId());
+        $billingAddressId = $customerData->getDefaultBilling();
+        $shippingAddressId = $customerData->getDefaultShipping();
+       /// echo("CID".$customer->getId()." ".$billingAddressId." ".$shippingAddressId);
+
+        $billingAddress = isset($billingAddressId) && $billingAddressId>0? $this->addressRepository->getById($billingAddressId):false;
+
+        $telephone =$billingAddress? $billingAddress->getTelephone():'';
+
+      //  echo("!!!!!: CUSTOMER".$websitesids);
+        $payload = ['email' => $customer->getEmail(),
+            'phone'=>$telephone,
+            // 'phone'=>$customer->getPhone(),
+            'websitesids' => [$websitesids],
+        'id'=>(string) $customer->getId(),
         'firstName'=>(string) $customer->getFirstname(),
         'lastName'=>(string) $customer->getLastname(),
         ];
+      //  echo("PPP:".json_encode($payload));
       //  $payload['firstName'] => ;
      //   $payload['lastName'] => (string) $customer->getFirstname();
 

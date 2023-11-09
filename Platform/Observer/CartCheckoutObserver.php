@@ -62,14 +62,14 @@ class CartCheckoutObserver implements ObserverInterface
     public function execute(Observer $observer)
     {
         if (!$this->generalSettings->cartManagementEnabled()) {
-            return $this;
+         //    return $this;
         }
 
         $order = $observer->getData('order');
         $quoteId = $order->getQuoteId();
         $quote = $this->cartRepository->get($quoteId);
         $this->cartCheckout->execute($quote, $order->getStatus());
-        if ($quote->getFortvisionSubscription()) {
+     //   if ($quote->getFortvisionSubscription()) {
             $customer = $quote->getCustomer();
             if (!$customer->getId()) {
                 $customer->setEmail($quote->getCustomerEmail());
@@ -78,7 +78,7 @@ class CartCheckoutObserver implements ObserverInterface
             }
 
             $this->addSubscription->execute($customer);
-        }
+      //  }
         return $this;
     }
 }

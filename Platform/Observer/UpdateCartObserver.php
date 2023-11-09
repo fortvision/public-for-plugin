@@ -7,6 +7,7 @@ use Fortvision\Platform\Service\CartUpdate;
 use Magento\Catalog\Model\CategoryFactory;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
+use Fortvision\Platform\Service\AddToCart;
 
 /**
  * Class UpdateCartObserver
@@ -28,6 +29,7 @@ class UpdateCartObserver implements ObserverInterface
      * @var CategoryFactory
      */
     protected $categoryFactory;
+    private AddToCart $addToCart;
 
     /**
      * UpdateCartObserver constructor.
@@ -37,10 +39,14 @@ class UpdateCartObserver implements ObserverInterface
      */
     public function __construct(
         CartUpdate $cartUpdate,
+        AddToCart                $addToCart,
+
         GeneralSettings $generalSettings,
         CategoryFactory $categoryFactory
     ) {
         $this->cartUpdate = $cartUpdate;
+        $this->addToCart = $addToCart;
+
         $this->generalSettings = $generalSettings;
         $this->categoryFactory = $categoryFactory;
     }
@@ -55,9 +61,11 @@ class UpdateCartObserver implements ObserverInterface
             return $this;
         }
 
+
         $cart = $observer->getData('cart');
         $quote = $cart->getQuote();
-        $this->cartUpdate->execute($quote);
+       //  $this->cartUpdate->execute($quote);
+        $this->addToCart->updateCart($quote);
         return $this;
     }
 }

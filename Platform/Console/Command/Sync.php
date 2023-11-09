@@ -94,13 +94,11 @@ class Sync extends Command
      * @return int|void
      * @throws LocalizedException
      */
-    protected function exec1ute(InputInterface $input, OutputInterface $output)
-    {
-
-    }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+    //    $this->mainVisionService->addUser("teswewqt@test.com");
+      //  return;
         // $this->state->setAreaCode(Area::AREA_ADMINHTML);
 
         $output->writeln('<info>Start sync DB process</info>');
@@ -108,13 +106,12 @@ class Sync extends Command
             $products = $this->mainVisionService->getAllProducts();
             $orders = $this->mainVisionService->getAllOrders();
             $customers = $this->mainVisionService->getAllCustomers();
-
-            $websites = $this->mainVisionService->getMagentoWebsites();
-
-            $output->writeln(json_encode($customers));
-            $output->writeln("\n");
             $source_data = $this->sendRequest('', ['kind' => 'get', 'id' => $this->magentoId], ['mode' => 'magento']);
             $source = json_decode($source_data['Response']);
+            if (!isset($source)) {
+                echo("CONN ERROR");
+                return;
+            }
             $sourceArr = (array)$source->result;
             $keysall = array_map(function ($dat) {
                 return str_replace("publisher_", '', $dat);
@@ -131,20 +128,32 @@ class Sync extends Command
                     return isset($line['websitesids']) && in_array($websiteCode, $line['websitesids']);
                 }));
                 $websiteCustomers = array_values(array_filter($customers, function ($line) use ($websiteCode) {
+                 //   echo($websiteCode.json_encode($line['websitesids']).in_array($websiteCode, $line['websitesids']));
                     return isset($line['websitesids']) && in_array($websiteCode, $line['websitesids']);
                 }));
                 if ($websiteProducts && count($websiteProducts)>0) {
                     $resres1 = $this->sendRequest('products', $websiteProducts, ["mode" => 'base', 'publisherId' => $publisherId]);
-                  //  echo("SYNC O HIST " . json_encode($resres1));
+               //     echo("SYNC PRODUCTS HIST " . json_encode($resres1));
+                    $output->writeln('<info>Sync DB- PRODUCTS  '.$websiteCode.' '.$publisherId.' '.count($websiteProducts).'has been finished</info>');
+
                 }
                 if ($websiteOrders && count($websiteOrders) > 0) {
                     $resres2 = $this->sendRequest('orders', $websiteOrders, ["mode" => 'base', 'publisherId' => $publisherId]);
-                //    echo("SYNC O RES " . json_encode($resres2));
+                 //   echo("SYNC ORDERS RES " . json_encode($resres2));
+                    $output->writeln('<info>Sync DB- ORDERS '.$websiteCode.' '.$publisherId.' '.count($websiteOrders).' has been finished</info>');
+
                 }
                 if ($websiteCustomers && count($websiteCustomers)>0) {
+
+                    //  echo("!!!".json_encode($websiteCustomers));
                     $resres3 = $this->sendRequest('customers', $websiteCustomers, ["mode" => 'base', 'publisherId' => $publisherId]);
-                    echo("SYNC C RES " . json_encode($resres3));
+                 //   echo("SYNC CUSTOMERS RES " . json_encode($resres3));
+                    $output->writeln('<info>Sync DB- CUSTOMERS '.$websiteCode.' '.$publisherId.' '.count($websiteCustomers).'  has been finished</info>');
+
                 }
+                $this->sendRequest('customers', $websiteCustomers, ["mode" => 'base', 'publisherId' => $publisherId]);
+              //  body: JSON.stringify({migrateHistoricalData: true, plugin: 'shopify', publisherId})
+                $this->sendRequest(false, false, ["mode" => 'base','migrateHistoricalData'=>true, 'publisherId' => $publisherId]);
 
             }
 
@@ -162,9 +171,7 @@ class Sync extends Command
     public function sendRequest($action, $data, $syncOptions)
     {
 
-
         try {
-
             if ($syncOptions && $syncOptions['mode'] === 'magento') {
                 $curlUrl = $this->magentoHelperUrl;
             } else
@@ -176,15 +183,12 @@ class Sync extends Command
                         $action => $data
                     );
                 }
-            //    echo("!!!!".$curlUrl);
             $ch = curl_init($curlUrl);
             curl_setopt($ch, CURLOPT_TIMEOUT, 3);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
             curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-
             curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
-
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
@@ -194,11 +198,6 @@ class Sync extends Command
             curl_setopt($ch, CURLINFO_HEADER_OUT, 1);
 
             $curlResponse = curl_exec($ch);
-            //      error_log('REQUEST:'. time()." ".json_encode($data)." ".$curlUrl);
-            //    error_log('RESPONSE:'. time()." ".json_encode($curlResponse)." ".$curlUrl);
-            // $this->logger->clog(['action' => 'REQUEST', 'value' => json_encode($data)." ".$curlUrl]);
-            // $this->logger->clog(['action' => 'RESPONSE', 'value' => json_encode($curlResponse)]);
-
             $curlError = curl_error($ch);
             $curlCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 

@@ -3,13 +3,28 @@
 ?>
 
 <script type="application/javascript">
-    window.addEventListener('load', function () {
-        var element = document.createElement('script');
-        element.setAttribute('type', 'application/javascript');
-        element.setAttribute('src', '<?= $block->getJsUrl() ?>');
-        element.setAttribute('publisher_id', '<?= $block->getPublisherId() ?>');
-        element.setAttribute('async', '');
-        document.body.appendChild(element);
+    window.addEventListener('load',   async()=>{
+        try
+        {
+
+        const magentoId='<?= $block->getMagentoId() ?>';
+        const res = await fetch('https://magentotools.fortvision.net', {
+            method: 'POST', body: JSON.stringify({kind: 'getpid',id:magentoId, url: window.location.host})
+        })
+        if (res) {
+            const publisherId = ((await res.json()) || {result:false}).result
+
+            console.log('LOADSCRIPT', '<?= $block->getJsUrl() ?>',publisherId, magentoId)
+            const element = document.createElement('script');
+            element.setAttribute('type', 'application/javascript');
+            element.setAttribute('src', '<?= $block->getJsUrl() ?>');
+            element.setAttribute('publisher_id', publisherId);
+            element.setAttribute('async', '');
+            document.body.appendChild(element);
+        }
+    } catch (ex) {
+            console.log('ex', ex)
+        }
     });
 </script>
 

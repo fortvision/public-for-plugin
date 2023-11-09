@@ -7,7 +7,6 @@
              resource="Fortvision_Platform::general"
              sortOrder="20"
              translate="title"
-
         />
 
         <add id="Fortvision_Platform::configuration"
@@ -18,8 +17,6 @@
              parent="Fortvision_Platform::general"
              action="adminhtml/system_config/edit/section/fortvision_platform"
              resource="Fortvision_Platform::configuration"/>
-
-
 
     </menu>
 </config>

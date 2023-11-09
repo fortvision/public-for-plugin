@@ -1,7 +1,9 @@
 <?php
 namespace Fortvision\Platform\Observer;
 
+use Fortvision\Platform\Provider\GeneralSettings;
 use Magento\Framework\Event\ObserverInterface;
+use Fortvision\Platform\Service\AddToCart;
 
 class OrderObserver implements ObserverInterface
 {
@@ -30,6 +32,8 @@ class OrderObserver implements ObserverInterface
     * @var \Magento\Sales\Api\OrderRepositoryInterface
     */
     protected $_orderRepository;
+    private AddToCart $addToCart;
+    private GeneralSettings $generalSettings;
 
     /**
     * @param \Magento\Sales\Model\ResourceModel\Order\Invoice\CollectionFactory $invoiceCollectionFactory
@@ -39,6 +43,9 @@ class OrderObserver implements ObserverInterface
     * @param \Magento\Sales\Api\OrderRepositoryInterface $orderRepository
     */
     public function __construct(
+        AddToCart                $addToCart,
+        GeneralSettings $generalSettings,
+
         \Magento\Sales\Model\ResourceModel\Order\Invoice\CollectionFactory $invoiceCollectionFactory,
         \Magento\Sales\Model\Service\InvoiceService $invoiceService,
         \Magento\Framework\DB\TransactionFactory $transactionFactory,
@@ -50,21 +57,23 @@ class OrderObserver implements ObserverInterface
           $this->_transactionFactory = $transactionFactory;
           $this->_invoiceRepository = $invoiceRepository;
           $this->_orderRepository = $orderRepository;
+        $this->addToCart = $addToCart;
+        $this->generalSettings = $generalSettings;
     }
 
 
 
 
     public function execute(\Magento\Framework\Event\Observer $observer)
-    {   
+    {
         $orderId = $observer->getEvent()->getOrder()->getId();
-        $this->createInvoice($orderId);      
+        $this->addToCart->parseCheckoutOrder($orderId);
 
     }
-
+/*
     protected function createInvoice($orderId)
     {
-        try 
+        try
         {
             $order = $this->_orderRepository->get($orderId);
             if ($order)
@@ -100,5 +109,5 @@ class OrderObserver implements ObserverInterface
                 __($e->getMessage())
             );
         }
-    }
+    }*/
 }

@@ -13,6 +13,7 @@ use Magento\Framework\Event\Manager;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Serialize\Serializer\Json;
 use Magento\Framework\Webapi\Rest\Request;
+use MailPoet\Exception;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -89,20 +90,38 @@ class HttpClient
     public function doRequest(string $uriEndpoint, array $params = [], $requestMethod = Request::HTTP_METHOD_GET)
     {
        // echo('doRequest-'.$uriEndpoint);
-        if (!$this->generalSettings->isModuleEnabled()) {
-            throw new LocalizedException(__('Fortvision Integration is disabled'));
-        }
+       // if (!$this->generalSettings->isModuleEnabled()) {
+       //     throw new LocalizedException(__('Fortvision Integration is disabled'));
+       // }
         /** @var Client $client */
         $client = $this->clientFactory->create();
         $requestedUrl = 'https://magentotools.fortvision.net';//$this->getUrl($uriEndpoint, $params, $requestMethod);
         $this->logger->debug('Fortvision Request: ' . $requestedUrl, $params);
         $this->setHeaders($params);
         $response = $this->request($client, $requestedUrl, $params, $requestMethod);
+
         if ($response != null && $response->getStatusCode() != 204) {
-            throw new LocalizedException(__('Fortvision Integration error ' . $response->getStatusCode() . ' - ' . $response->getReasonPhrase()));
+        //    throw new LocalizedException(__('Fortvision Integration error ' . $response->getStatusCode() . ' - ' . $response->getReasonPhrase()));
         }
+       // echo($requestedUrl);
         $this->logger->debug('Fortvision Response Code: ' . $response->getStatusCode());
         return $response;
+    }
+
+
+    public function doCloudflareRequest($body) {
+        $client = $this->clientFactory->create();
+        $requestedUrl = 'https://magentotools.fortvision.net/';//$this->getUrl($uriEndpoint, $params, $requestMethod);
+        $this->logger->debug('Fortvision Request CLOUD6: ' . $requestedUrl.' '.json_encode($body));
+
+        try {
+            $res=$client->post($requestedUrl, [ 'json'=>$body])->getBody()->getContents();
+         //   $this->logger->debug("res=>".($res));
+            return json_decode($res, true);
+        }
+        catch (Exception $e) {
+            $this->logger->debug($e->getMessage());
+        }
     }
 
     /**
@@ -149,6 +168,20 @@ class HttpClient
         $params['headers'] = $headers;
     }
 
+    private function setHeaderC(array &$params)
+    {
+
+        $headers = [
+            'Accept-Encoding' => 'gzip, deflate',
+            'Cache-Control' => 'no-cache',
+            'Content-Type' => 'application/json'
+        ];
+        $headers = isset($params['headers']) ? array_merge($headers, $params['headers']) : $headers;
+        $params['headers'] = $headers;
+    }
+
+
+
     /**
      * @param Client $client
      * @param $requestedUrl
@@ -167,7 +200,13 @@ class HttpClient
         if ($this->generalSettings->useSslVerify()) {
             $params[RequestOptions::VERIFY] = true;
         }
+        try {
+            return $client->request($requestMethod, $requestedUrl, $params);
+        }
+        catch (Exception $e) {
+            $this->logger->debug($e->getMessage());
+        }
+       // echo("\n--AAAAAerqw342342342\n");
 
-        return $client->request($requestMethod, $requestedUrl, $params);
     }
 }

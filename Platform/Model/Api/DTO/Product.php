@@ -73,67 +73,69 @@ class Product
     }
 
     //'\Magento\Catalog\Api\Data\ProductInterface'
+    public function getProductDataById($id) {
+        $product = $this->productRepository->getById($id);
+        return $this->getProductDataFromItem($product);
+    }
     public function getProductDataFromItem(ProductInterface $product)
     {
-        $productData = [
-            'customerProductId' => (int) $product->getId(),
-            'name' => (string) $product->getName(),
-            'description' => (string) $product->getDescription(),
-        //    'category' => (string) $categoryName,
-            'brand' => (string) $product->getBrand(),
-            'websitesids'=>$product->getWebsiteIds() ,
+        $skipName=['entity_id', 'attribute_set_id', 'type_id', 'status', 'old_id', 'name', 'url_path', 'required_options', 'has_options', 'image_label', 'small_image_label', 'thumbnail_label', 'created_at', 'sku', 'updated_at', 'sku_type', 'price', 'price_type', 'tax_class_id',  'weight', 'weight_type', 'visibility', 'category_ids', 'news_from_date', 'news_to_date', 'country_of_manufacture', 'links_purchased_separately', 'samples_title', 'links_title', 'links_exist',  'short_description', 'description', 'shipment_type', 'image', 'small_image', 'thumbnail', 'swatch_image', 'media_gallery', 'gallery', 'url_key', 'meta_title', 'meta_keyword', 'meta_description', 'special_price', 'special_from_date', 'special_to_date', 'cost', 'tier_price', 'minimal_price', 'msrp', 'msrp_display_actual_price_type', 'price_view', 'page_layout', 'options_container', 'custom_layout_update', 'custom_layout_update_file', 'custom_design_from', 'custom_design_to', 'custom_design', 'custom_layout', 'gift_message_available', 'attachment'];
 
-            'discountedValue' => (float) $product->getFinalPrice(),
-            'currency' => (string) $this->storeManager->getStore()->getCurrentCurrency()->getCurrencyCode(),
-            'discountName' => '',
-         //   'discountValue' => (float) $item->getBaseDiscountAmount(),
-            //      'imageUrl' => (string) stripslashes($product->getData('small_image')),
-            'productUrl' => (string) stripslashes($product->getProductUrl()),
-           'url_key'=> $product->getData('url_key')
-         //
-            //  'volume' => $itemQty
-        ];
+        $categoryIds = $product->getCategoryIds();
+        $categories=[];
+        foreach ($categoryIds as $category) {
+            $categoryInstance = $this->categoryRepository->get($category);
+            $categories[]=["id"=>$category, "name"=>$categoryInstance->getName()];
+
+        }
+
+
+        $attributes = $product->getAttributes();
+        $attributesValues=[];
+        foreach($attributes as $a)
+        {
+           // $dat= $product->getAttributeSetId();
+           $aname = $a->getName();
+           if (!in_array($aname, $skipName)) {
+               $avalue = $product->getData($aname);
+           //    $payload=;
+               $attributesValues[$aname]=$avalue;
+
+           }
+
+        }
 
 
         $data = array(
             'id' => (int) $product->getId(),
             'websitesids'=>$product->getWebsiteIds() ,
-
+            'category' => $categories,
             'name' => (string) $product->getName(),
-            'description' =>(string) $product->getDescription(),
-         ///   'description_short' => $product->get_short_description(), // )!_ CHECK
-          //  'date_created' => $product->get_date_created()->date('Y-m-d H:i:s'),   // )!_ CHECK
-         //   'date_modified' => $product->get_date_modified()->date('Y-m-d H:i:s'), // )!_ CHECK
-            'sale_price' => (float)$product->get_price(),
+            'description' =>(string) $product->getData('description'),
+            'description_short' => $product->getData('short_description'), // )!_ CHECK
+            'date_modified' => $product->getData('updated_at'), // )!_ CHECK
+            'date_created' => $product->getData('created_at'), // )!_ CHECK ->date('Y-m-d H:i:s')->date('Y-m-d H:i:s')
+           // 'sale_price' => (float)$product->getData('price'),
             // with discount
-            'regular_price' => (float)$product->get_regular_price(),
+            'regular_price' => (float)$product->getData('price'),
             // base price
-         //   'sku' => $product->get_sku(),
+           'sku' => (string) $product->getData('sku'),
             'brand' => (string) $product->getData('brand'), // ok
          //   'stock' => $product->get_stock_quantity(),
-            'discountedValue' => (float) $product->getFinalPrice(), // ok
+            'discountedValue' => (float) $product->getFinalPrice(),
 //
        //     'currency' => get_woocommerce_currency(),
-         //   'categories' => $this->getTaxonomy($productId, 'product_cat'),
          //   'tags' => $this->getTaxonomy($productId, 'product_tag'),
-         //   'attributes' => $this->getAttributes($productId),
+            'attributes' => $attributesValues,
             'imageUrl' =>  $product->getData('image'),
             'productUrl' => (string) stripslashes($product->getProductUrl()),
             'dimensions' => array(
-              //  'weight' => $product->get_weight(),
-              //  'length' => $product->get_length(),
-              //  'width' => $product->get_width(),
-               // 'height' => $product->get_height(),
+                'weight' => $product->getData('weight'),
+               'length' => $product->getData('length'),
+               'width' => $product->getData('width'),
+               'height' => $product->getData('height'),
             )
         );
-
-        /*
-
-
-
-
-         *
-         * */
 
         return $data;
     }

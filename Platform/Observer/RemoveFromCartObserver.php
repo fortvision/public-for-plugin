@@ -6,6 +6,7 @@ use Fortvision\Platform\Provider\GeneralSettings;
 use Fortvision\Platform\Service\RemoveFromCart;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
+use Fortvision\Platform\Service\AddToCart;
 
 /**
  * Class RemoveFromCartObserver
@@ -22,6 +23,7 @@ class RemoveFromCartObserver implements ObserverInterface
      * @var GeneralSettings
      */
     protected $generalSettings;
+    private AddToCart $addToCart;
 
     /**
      * RemoveFromCartObserver constructor.
@@ -30,9 +32,12 @@ class RemoveFromCartObserver implements ObserverInterface
      */
     public function __construct(
         RemoveFromCart $removeFromCart,
+        AddToCart                $addToCart,
+
         GeneralSettings $generalSettings
     ) {
         $this->removeFromCart = $removeFromCart;
+        $this->addToCart = $addToCart;
         $this->generalSettings = $generalSettings;
     }
 
@@ -42,13 +47,15 @@ class RemoveFromCartObserver implements ObserverInterface
      */
     public function execute(Observer $observer)
     {
+      //  echo('deldel');
         if (!$this->generalSettings->cartManagementEnabled()) {
-            return $this;
+         //   return $this;
         }
 
         $item = $observer->getData('quote_item');
         $quote = $item->getQuote();
-        $this->removeFromCart->execute($quote, $item);
+       // $this->removeFromCart->execute($quote, $item);
+        $this->addToCart->removeFromCart($quote, $item);
         return $this;
     }
 }

@@ -13,7 +13,7 @@ use Magento\Framework\Event\ObserverInterface;
  * Class AddToCartObserver
  * @package Fortvision\Platform\Observer
  */
-class AddToCartObserver implements ObserverInterface
+class AddToCartObserverBefore implements ObserverInterface
 {
     /**
      * @var AddToCart
@@ -62,21 +62,18 @@ class AddToCartObserver implements ObserverInterface
      */
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
-        $item = $observer->getEvent()->getData('quote_item');
         try {
-            $item = $observer->getQuoteItem();
+            $item = $observer->getEvent()->getItem();
             $quote = $item->getQuote();
             if (isset($quote) && $item) {
-                $this->addToCart->addToCart($quote, $item);
+                $this->addToCart->changeAmount($quote, $item);
             }
-            return $this;
+         //   return $this;
         } catch (Exception $ex) {
-           // $this->_logger->debug('EXEC  EX');
-           // $this->_logger->debug('EXEC ' . json_encode($ex));
+            // $this->_logger->debug('EXEC  EX');
+            // $this->_logger->debug('EXEC ' . json_encode($ex));
 
         }
-
-
 
 
     }
