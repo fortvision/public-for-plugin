@@ -19,7 +19,6 @@ use Magento\Quote\Api\Data\CartInterface;
 use Magento\Quote\Api\Data\CartItemInterface;
 use Fortvision\Platform\Logger\Integration as LoggerIntegration;
 
-
 /**
  * Class AddToCart
  * @package Fortvision\Platform\Service
