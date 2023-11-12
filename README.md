@@ -1,4 +1,4 @@
-Fortvision platform
+Fortvision platform extension
 # 
 
 php bin/magento setup:upgrade
