@@ -30,7 +30,7 @@ class AddToCart
     const ADD_TO_CART_ENDPOINT = '/cart-management/product/add';
     const ENDPOINT = self::ADD_TO_CART_ENDPOINT;
     const ENDPOINT_REMOVE = '/cart-management/product/remove';
-    const ENDPOINT_CHECKOUT = '/cart/checkout';
+    const ENDPOINT_CHECKOUT = '/cart-management/cart/checkout';
     const ENDPOINT_CART_STATUS = '/cart-management/cart/status';
 
 
@@ -179,7 +179,7 @@ class AddToCart
 
         $cartData['magento_id'] = $this->generalSettings->getMagentoId();
         $cartData['hostURL'] = $_SERVER['HTTP_HOST'];
-        $cartData['cart'] = $this->cartDto->getCartData($quote, 'change');
+        $cartData['cart'] = $this->cartDto->getCartData($quote, 'updated');
         $cartData['product'] = $this->productDto->getProductData($item);
         $cartData['userInfo'] = $this->customerDto->getUserInfoData($customer);
         $cartData['volume'] = $quote->getItemsQty();
@@ -205,17 +205,36 @@ class AddToCart
          */
     }
 
-    public function parseCheckoutOrder($orderId) {
+ //   public function parseCheckoutOrder($orderId) {
+    public function parseCheckoutOrder(CartInterface $quote, $status = '') {
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+        $quote->collectTotals();
+        $customer = $quote->getCustomer();
 
-        $order = $objectManager->create('\Magento\Sales\Model\OrderRepository')->get($orderId);
-        $payload = $this->orderDTO->getHistData($order);
+        if (!$customer->getId()) {
+            $customer->setEmail($quote->getCustomerEmail());
+            $customer->setFirstname($quote->getCustomerFirstname());
+            $customer->setLastname($quote->getCustomerLastname());
+        }
+
+
+        // $order = $objectManager->create('\Magento\Sales\Model\OrderRepository')->get($orderId);
+
+       // $payload = $this->orderDTO->getHistData($order);
         $cartData['kind'] = Action::CART_CHECKOUT;
+        $cartData['magento_id'] = $this->generalSettings->getMagentoId();
+
         $cartData['endpoint'] = self::ENDPOINT_CHECKOUT;
         $cartData['hostURL'] = $_SERVER['HTTP_HOST'];
-        $cartData['checkout'] = $payload;
+        $cartData['cart'] = $this->cartDto->getCartData($quote, $status);
+        $cartData['userInfo'] = $this->customerDto->getUserInfoData($customer);
+        $cartData['product'] = $cartData['cart']['products'][0];
+
+      //  $cartData['userInfo'] = $this->customerDto->getUserInfoDataByOrder($order);
+        $cartData['validation'] = true;
+
+        //  $cartData['userInfo'] = [];
         $this->process(json_encode($cartData));
-       // $cartData['userInfo'] = $this->customerDto->getUserInfoData($customer);
 
     }
 
@@ -234,22 +253,17 @@ class AddToCart
             }
             $url = \Magento\Framework\App\ObjectManager::getInstance()->get('Magento\Framework\UrlInterface');
             $cartData['kind'] = Action::REMOVE_FROM_CART;
-            $cartData['endpoint'] = self::ENDPOINT;
+
+            $cartData['magento_id'] = $this->generalSettings->getMagentoId();
+
+            $cartData['endpoint'] = self::ENDPOINT_REMOVE;
             $cartData['hostURL'] = $_SERVER['HTTP_HOST'];
             $cartData['cart'] = $this->cartDto->getCartData($quote, 'remove');
             $cartData['product'] = $this->productDto->getProductData($item);
             $cartData['userInfo'] = $this->customerDto->getUserInfoData($customer);
             $this->process(json_encode($cartData));
 
-            /*
-            $modelData = $this->json->serialize($cartData);
-            $history = $this->historyFactory->create();
-            $history->setStatus(Status::PENDING)
-                ->setAction(Action::REMOVE_FROM_CART)
-                ->setServiceClass(RemoveFromCart::class)
-                ->setEntityData($modelData);
-            $history = $this->historyRepository->save($history);
-            $this->processHistory->processById($history->getHistoryId());*/
+
         } catch (\Exception $e) {
             $this->_logger->debug("removeFromCart".$e->getMessage());
         }

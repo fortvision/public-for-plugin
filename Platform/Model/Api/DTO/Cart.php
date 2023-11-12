@@ -109,7 +109,7 @@ class Cart
       //      $payload['products'][] ='';// $this->productDto->getProductDataFromItem($cartItem);
       //  }
        // var_dump($order->getItems());
-        echo(json_encode($payload)."\n\n");
+     //   echo(json_encode($payload)."\n\n");
         return $payload;
 
     }
@@ -129,10 +129,14 @@ class Cart
         foreach ($cartItems as $cartItem) {
             $cartData['products'][] = $this->productDto->getProductData($cartItem);
         }
+      //  $cartData['product'] = $cartData['products'][0];
+
         $quote->collectTotals();
         $cartData['discountedValue'] = (float) $quote->getBaseGrandTotal();
         $cartData['volume'] = (int) $quote->getItemsQty();
-        $cartData['couponId'] = (string) $quote->getCouponCode();
+        $coupon=  (string) $quote->getCouponCode();
+        if (isset($coupon) && strlen($coupon)>0) $cartData['couponId']=$coupon;
+       // $cartData['couponId'] = (string) $quote->getCouponCode();
         $cartData['discountValue'] = (float) abs($quote->getBaseSubtotalWithDiscount() - $quote->getBaseSubtotal());
         $cartData['cmsStatus'] = (string) $status;
 

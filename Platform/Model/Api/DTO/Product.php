@@ -79,14 +79,17 @@ class Product
     }
     public function getProductDataFromItem(ProductInterface $product)
     {
-        $skipName=['entity_id', 'attribute_set_id', 'type_id', 'status', 'old_id', 'name', 'url_path', 'required_options', 'has_options', 'image_label', 'small_image_label', 'thumbnail_label', 'created_at', 'sku', 'updated_at', 'sku_type', 'price', 'price_type', 'tax_class_id',  'weight', 'weight_type', 'visibility', 'category_ids', 'news_from_date', 'news_to_date', 'country_of_manufacture', 'links_purchased_separately', 'samples_title', 'links_title', 'links_exist',  'short_description', 'description', 'shipment_type', 'image', 'small_image', 'thumbnail', 'swatch_image', 'media_gallery', 'gallery', 'url_key', 'meta_title', 'meta_keyword', 'meta_description', 'special_price', 'special_from_date', 'special_to_date', 'cost', 'tier_price', 'minimal_price', 'msrp', 'msrp_display_actual_price_type', 'price_view', 'page_layout', 'options_container', 'custom_layout_update', 'custom_layout_update_file', 'custom_design_from', 'custom_design_to', 'custom_design', 'custom_layout', 'gift_message_available', 'attachment'];
+        $skipName=['entity_id', 'quantity_and_stock_status','attribute_set_id', 'type_id', 'status', 'old_id', 'name', 'url_path', 'required_options', 'has_options', 'image_label', 'small_image_label', 'thumbnail_label', 'created_at', 'sku', 'updated_at', 'sku_type', 'price', 'price_type', 'tax_class_id',  'weight', 'weight_type', 'visibility', 'category_ids', 'news_from_date', 'news_to_date', 'country_of_manufacture', 'links_purchased_separately', 'samples_title', 'links_title', 'links_exist',  'short_description', 'description', 'shipment_type', 'image', 'small_image', 'thumbnail', 'swatch_image', 'media_gallery', 'gallery', 'url_key', 'meta_title', 'meta_keyword', 'meta_description', 'special_price', 'special_from_date', 'special_to_date', 'cost', 'tier_price', 'minimal_price', 'msrp', 'msrp_display_actual_price_type', 'price_view', 'page_layout', 'options_container', 'custom_layout_update', 'custom_layout_update_file', 'custom_design_from', 'custom_design_to', 'custom_design', 'custom_layout', 'gift_message_available', 'attachment'];
 
         $categoryIds = $product->getCategoryIds();
         $categories=[];
+        $categoryString = '';
+        $first=true;
         foreach ($categoryIds as $category) {
             $categoryInstance = $this->categoryRepository->get($category);
             $categories[]=["id"=>$category, "name"=>$categoryInstance->getName()];
-
+            $categoryString=$categoryString.($first?'':', ').$categoryInstance->getName();
+            $first=false;
         }
 
 
@@ -94,22 +97,18 @@ class Product
         $attributesValues=[];
         foreach($attributes as $a)
         {
-           // $dat= $product->getAttributeSetId();
            $aname = $a->getName();
            if (!in_array($aname, $skipName)) {
                $avalue = $product->getData($aname);
-           //    $payload=;
                $attributesValues[$aname]=$avalue;
-
            }
-
         }
-
 
         $data = array(
             'id' => (int) $product->getId(),
+            'customerProductId' => (int) $product->getId(),
             'websitesids'=>$product->getWebsiteIds() ,
-            'category' => $categories,
+            'category' => $categoryString,
             'name' => (string) $product->getName(),
             'description' =>(string) $product->getData('description'),
             'description_short' => $product->getData('short_description'), // )!_ CHECK
@@ -119,13 +118,13 @@ class Product
             // with discount
             'regular_price' => (float)$product->getData('price'),
             // base price
-           'sku' => (string) $product->getData('sku'),
             'brand' => (string) $product->getData('brand'), // ok
          //   'stock' => $product->get_stock_quantity(),
             'discountedValue' => (float) $product->getFinalPrice(),
 //
        //     'currency' => get_woocommerce_currency(),
          //   'tags' => $this->getTaxonomy($productId, 'product_tag'),
+            'sku' => (string) $product->getData('sku'),
             'attributes' => $attributesValues,
             'imageUrl' =>  $product->getData('image'),
             'productUrl' => (string) stripslashes($product->getProductUrl()),
@@ -136,6 +135,9 @@ class Product
                'height' => $product->getData('height'),
             )
         );
+        if (strlen($data['description'])===0) $data['description']=' ';
+        if (strlen($data['brand'])===0) $data['brand']=' ';
+        if (strlen($data['imageUrl'])===0) $data['imageUrl']=' ';
 
         return $data;
     }
@@ -147,6 +149,8 @@ class Product
      */
     public function getProductData(CartItemInterface $item)
     {
+        $skipName=['entity_id', 'quantity_and_stock_status','attribute_set_id', 'type_id', 'status', 'old_id', 'name', 'url_path', 'required_options', 'has_options', 'image_label', 'small_image_label', 'thumbnail_label', 'created_at', 'sku', 'updated_at', 'sku_type', 'price', 'price_type', 'tax_class_id',  'weight', 'weight_type', 'visibility', 'category_ids', 'news_from_date', 'news_to_date', 'country_of_manufacture', 'links_purchased_separately', 'samples_title', 'links_title', 'links_exist',  'short_description', 'description', 'shipment_type', 'image', 'small_image', 'thumbnail', 'swatch_image', 'media_gallery', 'gallery', 'url_key', 'meta_title', 'meta_keyword', 'meta_description', 'special_price', 'special_from_date', 'special_to_date', 'cost', 'tier_price', 'minimal_price', 'msrp', 'msrp_display_actual_price_type', 'price_view', 'page_layout', 'options_container', 'custom_layout_update', 'custom_layout_update_file', 'custom_design_from', 'custom_design_to', 'custom_design', 'custom_layout', 'gift_message_available', 'attachment'];
+
         $itemQty = $item->getQty();
         $item = $item->getHasChildren() ? $item->getChildren()[0] : $item;
         $itemProduct = $item->getProduct();
@@ -158,6 +162,16 @@ class Product
             $category = $this->categoryRepository->get($categoryId);
             $categoryName = $category->getName();
         }
+        $attributes = $product->getAttributes();
+        $attributesValues=[];
+        foreach($attributes as $a)
+        {
+            $aname = $a->getName();
+            if (!in_array($aname, $skipName)) {
+                $avalue = $product->getData($aname);
+                $attributesValues[$aname]=$avalue;
+            }
+        }
 
         $productData = [
             'customerProductId' => (int) $product->getId(),
@@ -167,12 +181,18 @@ class Product
             'brand' => (string) $product->getBrand(),
             'discountedValue' => (float) $product->getFinalPrice(),
             'currency' => (string) $this->storeManager->getStore()->getCurrentCurrency()->getCurrencyCode(),
-            'discountName' => '',
+            'discountName' => ' ',
             'discountValue' => (float) $item->getBaseDiscountAmount(),
+            'sku' => (string) $product->getData('sku'),
+            'attributes' => $attributesValues,
+            'imageUrl' =>  $product->getData('image'),
       //      'imageUrl' => (string) stripslashes($product->getData('small_image')),
             'productUrl' => (string) stripslashes($product->getProductUrl()),
             'volume' => $itemQty
         ];
+        if (!isset($productData['description']) || strlen($productData['description'])===0) $productData['description']=' ';
+        if (!isset($productData['brand']) || strlen($productData['brand'])===0) $productData['brand']=' ';
+        if (!isset($productData['imageUrl']) || strlen($productData['imageUrl'])===0) $productData['imageUrl']=' ';
 
         return $productData;
     }

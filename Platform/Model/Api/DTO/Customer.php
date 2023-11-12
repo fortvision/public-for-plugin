@@ -9,6 +9,7 @@ use Magento\Customer\Model\Session;
 use Magento\Framework\Stdlib\CookieManagerInterface;
 use Magento\Framework\Stdlib\DateTime\DateTime;
 use Magento\Store\Model\StoreManagerInterface;
+use Fortvision\Platform\Logger\Integration as LoggerIntegration;
 
 /**
  * Class Customer
@@ -48,6 +49,7 @@ class Customer
     protected $addressRepository;
     private \Magento\Framework\ObjectManagerInterface $_objectManager;
     private \Magento\Customer\Api\CustomerRepositoryInterface $customerRepository;
+    private LoggerIntegration $_logger;
 
     /**
      * Customer constructor.
@@ -60,6 +62,8 @@ class Customer
      */
     public function __construct(
         GeneralSettings $generalSettings,
+        LoggerIntegration $logger,
+
         DateTime $date,
         StoreManagerInterface $storeManager,
         Data $helper,
@@ -69,6 +73,8 @@ class Customer
         \Magento\Customer\Api\AddressRepositoryInterface $addressRepository,
         Session $customerSession
     ) {
+        $this->_logger = $logger;
+
         $this->generalSettings = $generalSettings;
         $this->date = $date;
         $this->storeManager = $storeManager;
@@ -115,7 +121,6 @@ class Customer
 
         $telephone =$billingAddress? $billingAddress->getTelephone():'';
 
-      //  echo("!!!!!: CUSTOMER".$websitesids);
         $payload = ['email' => $customer->getEmail(),
             'phone'=>$telephone,
             // 'phone'=>$customer->getPhone(),
@@ -129,6 +134,32 @@ class Customer
      //   $payload['lastName'] => (string) $customer->getFirstname();
 
         return $payload;
+    }
+    public function getUserInfoDataByOrder($order) {
+      //  if ($order->getCustomerIsGuest()) {
+            $userInfo = [
+                'publisherId' => (string) $this->generalSettings->getPublisher(),
+                'userId' => (string) $this->cookieManager->getCookie('fortvision_uuid'),
+                'firstName' => (string) $order->getCustomerFirstname(),
+                'lastName' => (string) $order->getCustomerLirstname(),
+                'email' => (string) $order->getCustomerEmail(),
+                'isLoggedIn' => (int) $this->customerSession->isLoggedIn()
+
+            ];
+            return $userInfo;
+       // } else {
+         //   return $this->getUserInfoData($order->getCustomer());
+        //}
+
+        // HECK:".$customerId." ".($order->getCustomerIsGuest()?'guest':'notguest')." ".$order->getCustomerEmail()." ".$order->getCustomerFirstname()." ".$order->getCustomerDob());
+
+
+    }
+    public function getUserInfoDataById($customerId) {
+        $customerData = $this->customerRepository->getById($customerId);
+        $this->_logger->debug('INININ'.$customerId." ".get_class($customerData));
+
+        return $this->getUserInfoData($customerData);
     }
     public function getUserInfoData(CustomerInterface $customer)
     {

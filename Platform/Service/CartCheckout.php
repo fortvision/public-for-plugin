@@ -13,6 +13,7 @@ use Fortvision\Platform\Model\Rest\HttpClient;
 use Magento\Framework\Serialize\Serializer\Json;
 use Magento\Framework\Webapi\Rest\Request;
 use Magento\Quote\Api\Data\CartInterface;
+use Fortvision\Platform\Provider\GeneralSettings;
 
 /**
  * Class CartCheckout
@@ -57,6 +58,7 @@ class CartCheckout
      * @var Json
      */
     protected $json;
+    private GeneralSettings $generalSettings;
 
     /**
      * AddToCart constructor.
@@ -72,12 +74,16 @@ class CartCheckout
         HttpClient $httpClient,
         HistoryProcess $processHistory,
         CartDTO $cartDto,
+        GeneralSettings $generalSettings,
+
         CustomerDTO $customerDto,
         HistoryFactory $historyFactory,
         HistoryRepository $historyRepository,
         Json $json
     ) {
         $this->httpClient = $httpClient;
+        $this->generalSettings = $generalSettings;
+
         $this->processHistory = $processHistory;
         $this->cartDto = $cartDto;
         $this->customerDto = $customerDto;
@@ -121,6 +127,8 @@ class CartCheckout
             $url = \Magento\Framework\App\ObjectManager::getInstance()->get('Magento\Framework\UrlInterface');
             $cartData['kind'] = Action::CART_CHECKOUT;
             $cartData['endpoint'] = self::ENDPOINT;
+            $cartData['magento_id'] = $this->generalSettings->getMagentoId();
+
             $cartData['hostURL'] = $_SERVER['HTTP_HOST'];
             $cartData['cart'] = $this->cartDto->getCartData($quote, $status);
             $cartData['userInfo'] = $this->customerDto->getUserInfoData($customer);
