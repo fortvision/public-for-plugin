@@ -1,7 +1,7 @@
 {
     "name": "fortvision/platform",
     "description": "Fortvision Platform Extension metapackage",
-    "version": "0.2.0",
+    "version": "0.2.1",
     "type": "metapackage",
     "require": {
         "php": "^7.4 || >=8.0.0",
