@@ -54,3 +54,8 @@ After installation you should sync orders and products with Fortvision
 
 ./bin/magento fortvision:export 
 
+
+To update script version please use command
+
+composer update fortvision/platform
+
