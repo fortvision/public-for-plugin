@@ -1,7 +1,18 @@
 {
     "name": "fortvision/platform",
     "description": "Fortvision Platform Extension metapackage",
-    "version": "1.0.0",
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "Andrei Zienko",
+            "email": "andrei.zienko@suprematik.com",
+            "role": "Developer"
+        },{
+            "name": "Fortvision",
+            "email": "fortvision@fortvision.com",
+            "role": "Developer"
+        }
+        ],
     "autoload": {
         "files": [
             "registration.php"
