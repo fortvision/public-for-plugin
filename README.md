@@ -1,34 +1,47 @@
-Fortvision platform extension
-# 
+**How To Install the Extension With Composer**
 
-@- Enable the module by running `php bin/magento module:enable Fortvision_Platform`
+Before install of any extension  make sure you:
 
+Back up your server. Set pre-install file permissions. Enable developer mode. Put Magento in maintenance mode.
 
-**How To Install a Magento 2 Extension via .zip file**
+After that launch from the main magento folder
 
-1. Upload the Magento 2 extension files to your server.
-
-2. Extract the .zip extension file.
-
-3. Copy the Magento extension files into the app/code folder.
-
-4. Install the Magento 2 extension and check its status.
+composer require fortvision/platform
 
 php bin/magento setup:upgrade
 
-php bin/magento module:enable Fortvision_Platform`
+php bin/magento setup:di:compile
+
+php bin/magento cache:clean
+
+php bin/magento cache:flush
+
+
+
+**How To Install an Extension via .zip file**
+
+1. Upload the Magento 2 extension files to your server and extract the .zip extension file.
+
+2. Copy the Magento extension files into the app/code folder. 
+The folder with README.md file should be located like that %magentofolder%/app/code/Fortvision/Platform/
+
+3. RUN commands
+
+php bin/magento setup:upgrade
 
 php bin/magento setup:di:compile
 
 php bin/magento setup:static-content:deploy -f
 
-5. Clear Magento cache and disable maintenance mode.
+4. Clear Magento cache and disable maintenance mode.
 
 php bin/magento cache:flush
 
 
-**How To Install a Magento 2 Extension With Composer**
 
-Before we show you how to install a Magento 2 extension via Composer, make sure you:
+If you need enable/disable module you should use
 
-Back up your server. Set pre-install file permissions. Enable developer mode. Put Magento in maintenance mode.
+Enable the module by running `php bin/magento module:disable Fortvision_Platform` 
+or  `php bin/magento module:enable Fortvision_Platform`
+
+
