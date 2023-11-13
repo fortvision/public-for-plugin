@@ -8,6 +8,7 @@ use Magento\Framework\Setup\ModuleDataSetupInterface;
 use Magento\Framework\Setup\UpgradeDataInterface;
 use Magento\Framework\FlagManager;
 use Magento\Store\Model\ScopeInterface;
+use Fortvision\Platform\Model\Api\MainService as MainVisionService;
 
 use Magento\Framework\App\Config\Storage\WriterInterface;
 
@@ -27,6 +28,7 @@ class UpgradeData implements UpgradeDataInterface
    // private $storeFactory;
     private $scopeConfig;
     private $configWriter;
+    private MainVisionService $mainVisionService;
 
     public function __construct(
         \Magento\Cms\Model\PageFactory    $pageFactory,
@@ -35,6 +37,7 @@ class UpgradeData implements UpgradeDataInterface
         WriterInterface $configWriter,
 
         ScopeConfigInterface     $scopeConfig,
+        MainVisionService                                  $mainVisionService,
 
         \Psr\Log\LoggerInterface          $logger
     )
@@ -42,6 +45,8 @@ class UpgradeData implements UpgradeDataInterface
       //  $this->pageFactory = $pageFactory;
       //  $this->storeFactory = $storeFactory;
         $this->scopeConfig = $scopeConfig;
+        $this->mainVisionService = $mainVisionService;
+
         $this->logger = $logger;
         $this->flagManager = $flagManager;
         $this->configWriter = $configWriter;
@@ -60,11 +65,12 @@ class UpgradeData implements UpgradeDataInterface
              $this->flagManager->saveFlag($flagCode,$current );
          }
         $this->configWriter->save(self::XML_PATH_GENERAL_DB_MAGENTO, $current);
+        $res = $this->mainVisionService->doSyncDataRegular();
 
 
         // echo('TESTTESTTEST UPGRADE');
         if ($logger) {
-            $logger->debug('FV UPGRADE');
+            $logger->debug('FV INSTALL UPGRADE');
         }
     }
 

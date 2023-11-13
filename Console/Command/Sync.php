@@ -97,11 +97,14 @@ class Sync extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-    //    $this->mainVisionService->addUser("teswewqt@test.com");
-      //  return;
-        // $this->state->setAreaCode(Area::AREA_ADMINHTML);
 
         $output->writeln('<info>Start sync DB process</info>');
+        $res = $this->mainVisionService->doSyncDataRegular();
+
+        if ($res)             return Cli::RETURN_SUCCESS;
+        return Cli::RETURN_FAILURE;
+
+        /*
         try {
             $products = $this->mainVisionService->getAllProducts();
             $orders = $this->mainVisionService->getAllOrders();
@@ -164,10 +167,10 @@ class Sync extends Command
             $output->writeln('<error>Sync DB has been failed</error>');
             $this->logger->critical($e->getMessage());
             return Cli::RETURN_FAILURE;
-        }
+        } */
     }
 
-
+/*
     public function sendRequest($action, $data, $syncOptions)
     {
 
@@ -231,5 +234,5 @@ class Sync extends Command
             error_log("Expsend" . json_encode($e));
         }
         return false;
-    }
+    } */
 }
