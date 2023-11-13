@@ -2,31 +2,6 @@
     "name": "fortvision/platform",
     "description": "Fortvision Platform Extension metapackage",
     "version": "0.3.0",
-    "type": "metapackage",
-    "require": {
-        "php": "^7.4 || >=8.0.0",
-        "ext-intl": "*",
-        "laminas/laminas-servicemanager": "^3.14.0",
-        "laminas/laminas-stdlib": "^2.7 || ^3.0"
-    },
-    "require-dev": {
-    },
-    "conflict": {
-        "laminas/laminas-view": "<2.20.0",
-        "phpspec/prophecy": "<1.9.0",
-        "zendframework/zend-i18n": "*"
-    },
-    "authors": [
-        {
-            "name": "FORTVISION",
-            "email": "info@fortvision.com",
-            "homepage": "https://fortvision.com",
-            "role": "Technical Support"
-        }],
-    "license": [
-        "OSL-3.0",
-        "AFL-3.0"
-    ],
     "autoload": {
         "files": [
             "registration.php"
@@ -34,7 +9,15 @@
         "psr-4": {
             "Fortvision\\Platform\\": ""
         }
+    },
+    "config": {
+        "optimize-autoloader": true
+    },
+    "require": {
+        "magento/module-quote": ">=101.1.3",
+        "ext-curl": "*"
     }
 }
+
 
 
