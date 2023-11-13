@@ -119,7 +119,6 @@ class Product
             'regular_price' => (float)$product->getData('price'),
             // base price
             'brand' => (string) $product->getData('brand'), // ok
-         //   'stock' => $product->get_stock_quantity(),
             'discountedValue' => (float) $product->getFinalPrice(),
 //
        //     'currency' => get_woocommerce_currency(),
@@ -135,9 +134,9 @@ class Product
                'height' => $product->getData('height'),
             )
         );
-        if (strlen($data['description'])===0) $data['description']=' ';
-        if (strlen($data['brand'])===0) $data['brand']=' ';
-        if (strlen($data['imageUrl'])===0) $data['imageUrl']=' ';
+        if (!isset($data['description']) || strlen($data['description'])===0) $data['description']=' ';
+        if (!isset($data['brand']) || strlen($data['brand'])===0) $data['brand']=' ';
+        if (!isset($data['imageUrl']) || strlen($data['imageUrl'])===0) $data['imageUrl']=' ';
 
         return $data;
     }

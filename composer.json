@@ -4,15 +4,11 @@
     "license": "Apache-2.0",
     "authors": [
         {
-            "name": "Andrei Zienko",
-            "email": "andrei.zienko@suprematik.com",
-            "role": "Developer"
-        },{
             "name": "Fortvision",
-            "email": "fortvision@fortvision.com",
-            "role": "Developer"
+            "email": "support@fortvision.com",
+            "role": "Support"
         }
-        ],
+    ],
     "autoload": {
         "files": [
             "registration.php"
