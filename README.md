@@ -48,6 +48,7 @@ or  `php bin/magento module:enable Fortvision_Platform`
 If you use magento in docker, don't forget to restart container
 
 
+
 **How to use
 After installation you should sync orders and products with Fortvision
 
