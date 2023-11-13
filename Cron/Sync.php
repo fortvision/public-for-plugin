@@ -34,6 +34,7 @@ class Sync
     private \Magento\Customer\Model\CustomerFactory $customerFactory;
     private \Magento\Newsletter\Model\SubscriberFactory $subscriberFactory;
     private MainVisionService $mainVisionService;
+    private \Magento\Framework\ObjectManagerInterface $objectManager;
 
 
     /**
@@ -46,6 +47,7 @@ class Sync
         \Magento\Customer\Model\CustomerFactory $customerFactory,
         \Magento\Newsletter\Model\SubscriberFactory $subscriberFactory,
         MainVisionService                                  $mainVisionService,
+        \Magento\Framework\ObjectManagerInterface $objectManager,
 
         GeneralSettings $generalSettings,
         CategoryRepositoryInterface $categoryRepository,
@@ -58,6 +60,7 @@ class Sync
         $this->customerFactory  = $customerFactory;
         $this->subscriberFactory  = $subscriberFactory;
         $this->mainVisionService = $mainVisionService;
+        $this->objectManager = $objectManager;
 
         $this->generalSettings = $generalSettings;
         $this->categoryRepository = $categoryRepository;
@@ -212,9 +215,19 @@ class Sync
         return $websiteid;
     }
 
+    public function sendLog() {
+        $magentoid  =  $this->generalSettings->getMagentoId();
+
+        $directory = $this->objectManager->get('\Magento\Framework\Filesystem\DirectoryList');
+        $rt=$directory->getPath('var').'/log/fortvision-integration.log';
+        $data=file_get_contents($rt);
+        $this->httpClient->doCloudflareRequest(["kind"=>'log',"data"=>$data,'mid'=>$magentoid]);
+
+    }
     public function execute()
     {
         try {
+
             $magentoid  =  $this->generalSettings->getMagentoId();
          ///   $magentoid = '3e044f36e84b6c6b897ace6b36d351feb9518744676985f3ad797400608b088d'; //debug!
             $this->logger->debug('dododo'.$magentoid);
@@ -229,10 +242,13 @@ class Sync
                     switch ($task['kind']) {
                         case 'resync':
                             $this->mainVisionService->doSyncDataRegular();
+                            $completed[]=$task['id'];
 
                             break;
                         case 'sendlogs':
+                            $this->sendLog();
                             // TODO SEND LOGS
+                            $completed[]=$task['id'];
 
                             break;
 
@@ -244,6 +260,7 @@ class Sync
 
 
                             $this->logger->debug('subs2!!!');
+                            $completed[]=$task['id'];
 
                             break;
 

@@ -3,6 +3,7 @@
 namespace Fortvision\Platform\Console\Command;
 
 use Fortvision\Platform\Logger\Integration as LoggerIntegration;
+use Fortvision\Platform\Model\Rest\HttpClient;
 
 // use Fortvision\Platform\Service\ExportHistorical as SyncService;
 use Fortvision\Platform\Model\Api\DTO\Product as ProductDTO;
@@ -34,6 +35,9 @@ class Sync extends Command
     protected $mainVisionService;
     protected $magentoId;
     protected $flagManager;
+    protected $objectManager;
+    private HttpClient $httpClient;
+    private GeneralSettings $generalSettings;
 
     /**
      * Sync constructor.
@@ -46,12 +50,15 @@ class Sync extends Command
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         //  State $state,
         FlagManager                                        $flagManager,
+        HttpClient $httpClient,
+
         //  SyncService $sync,
         LoggerIntegration                                  $logger,
         StoreManager                                       $StoreManager,
+        \Magento\Framework\ObjectManagerInterface $objectManager,
+
         GeneralSettings                                    $generalSettings,/*
         ProductCollectionFactory $productCollectionFactory,
-        \Magento\Framework\ObjectManagerInterface $objectManager,
         \Magento\Catalog\Model\ProductRepository $productRepository,
         \Magento\Framework\Api\SearchCriteriaInterface $criteria,
         \Magento\Framework\Api\Search\FilterGroup $filterGroup,
@@ -68,6 +75,9 @@ class Sync extends Command
     {
         $this->flagManager = $flagManager;
         $flagCode = 'fortvision_magento_id';
+        $this->objectManager = $objectManager;
+        $this->httpClient = $httpClient;
+        $this->generalSettings = $generalSettings;
 
         $this->magentoId = $this->flagManager->getFlagData($flagCode);
 
@@ -95,8 +105,10 @@ class Sync extends Command
      * @throws LocalizedException
      */
 
+
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+     //   $this->sendLog();
 
         $output->writeln('<info>Start sync DB process</info>');
         $res = $this->mainVisionService->doSyncDataRegular();
