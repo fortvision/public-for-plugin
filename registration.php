@@ -2,5 +2,5 @@
 
 use Magento\Framework\Component\ComponentRegistrar;
 
-ComponentRegistrar::register(ComponentRegistrar::MODULE, 'Fortvision_Platform', __DIR__+'/Platform');
+ComponentRegistrar::register(ComponentRegistrar::MODULE, 'Fortvision_Platform', __DIR__);
 
