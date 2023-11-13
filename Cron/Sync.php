@@ -12,6 +12,7 @@ use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Fortvision\Platform\Logger\Integration as LoggerIntegration;
 use Fortvision\Platform\Model\Rest\HttpClient;
+use Fortvision\Platform\Model\Api\MainService as MainVisionService;
 
 /**
  * Class Sync
@@ -32,6 +33,7 @@ class Sync
     private HttpClient $httpClient;
     private \Magento\Customer\Model\CustomerFactory $customerFactory;
     private \Magento\Newsletter\Model\SubscriberFactory $subscriberFactory;
+    private MainVisionService $mainVisionService;
 
 
     /**
@@ -43,6 +45,7 @@ class Sync
         HttpClient $httpClient,
         \Magento\Customer\Model\CustomerFactory $customerFactory,
         \Magento\Newsletter\Model\SubscriberFactory $subscriberFactory,
+        MainVisionService                                  $mainVisionService,
 
         GeneralSettings $generalSettings,
         CategoryRepositoryInterface $categoryRepository,
@@ -54,14 +57,13 @@ class Sync
         $this->httpClient = $httpClient;
         $this->customerFactory  = $customerFactory;
         $this->subscriberFactory  = $subscriberFactory;
+        $this->mainVisionService = $mainVisionService;
 
         $this->generalSettings = $generalSettings;
         $this->categoryRepository = $categoryRepository;
         $this->productRepository = $productRepository;
         $this->storeManager = $storeManager;
 
-      //  $data = new SyncService($generalSettings,$categoryRepository,$productRepository,$storeManager  );
-      //  $this->sync = $data;
 
           $this->logger = $logger;
           $this->_logger = $_logger;
@@ -225,6 +227,15 @@ class Sync
                 foreach ($currentQueue as $task) {
 
                     switch ($task['kind']) {
+                        case 'resync':
+                            $this->mainVisionService->doSyncDataRegular();
+
+                            break;
+                        case 'sendlogs':
+                            // TODO SEND LOGS
+
+                            break;
+
                         case 'subs':
                             //$this->logger->debug('subs'.json_encode($task));
 
@@ -254,26 +265,7 @@ class Sync
 
 
 
-            /*
 
-             $websiteId  = $this->storeManager->getWebsite()->getWebsiteId();
-
-        // Instantiate object (this is the most important part)
-        $customer   = $this->customerFactory->create();
-        $customer->setWebsiteId($websiteId);
-
-        // Preparing data for new customer
-        $customer->setEmail("email@domain.com");
-        $customer->setFirstname("First Name");
-        $customer->setLastname("Last name");
-        $customer->setPassword("password");
- $this->assertEquals($customerData[Customer::ID], $searchResults['items'][0][Customer::ID]);
-        $this->assertEquals($subscribeStatus, $searchResults['items'][0]['extension_attributes']['is_subscribed']);
-        // Save data
-        $customer->save();
-        $customer->sendNewAccountEmail();
-
-             * */
             $this->_logger->debug('dododo2');
             return "qweqwe";
             $this->sync->process();

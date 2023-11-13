@@ -78,7 +78,7 @@ class UpgradeData implements UpgradeDataInterface
     function upgrade(ModuleDataSetupInterface $setup, ModuleContextInterface $context)
     {
         $setup->startSetup();
-        echo('TEST');
+       //  echo('TEST');
         $setup->endSetup();
     }
 }
