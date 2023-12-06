@@ -21,7 +21,7 @@ class Index extends \Magento\Backend\App\Action
 
     public function execute()
     {
-        echo 'My admin controller';
+      //  echo 'My admin controller';
     }
 
     protected function _isAllowed()

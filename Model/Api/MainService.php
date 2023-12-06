@@ -188,7 +188,7 @@ class MainService
         $customer->setForceConfirmed(true);
         $customer->save();
         $customer->sendNewAccountEmail();
-        echo('wew-9');
+//        echo('wew-9');
 
     }
     public function getAllCustomers()
@@ -273,7 +273,7 @@ class MainService
             curl_close($ch);
             return $logData;
         } catch (\Exception $e) {
-            echo("EXPSPExceptionSP" . ($e->getMessage()));
+        //    echo("EXPSPExceptionSP" . ($e->getMessage()));
             error_log("Expsend" . json_encode($e));
         }
         return false;
@@ -290,7 +290,7 @@ class MainService
          $source_data = $this->sendRequest('', ['kind' => 'get', 'id' => $magentoId], ['mode' => 'magento']);
          $source = json_decode($source_data?$source_data['Response']:'{"result":[]}');
          if (!isset($source)) {
-             echo("CONN ERROR");
+        //     echo("CONN ERROR");
              return;
          }
          $sourceArr = (array)$source->result;

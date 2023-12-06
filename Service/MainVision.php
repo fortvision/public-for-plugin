@@ -93,14 +93,13 @@ class MainVision // extends Action
     {
         $result = $this->getProductData();
         $websites= $this->getMagentoWebsites();
-        $this->response
+        return $this->response
             ->setHeader('Content-Transfer-Encoding', 'binary', true)
+            ->setMimeType('application/json')
             ->setBody(json_encode(["result"=>$result,'list'=>$websites]))
             ->setHeader('Content-Type', 'application/json', true)
             //   ->setHeader('Content-Typ2e', 'application/json', true)
             ->sendResponse();
-        die();
-
     }
 
     /**
@@ -141,7 +140,6 @@ class MainVision // extends Action
             ->setHeader('Content-Type', 'application/json', true)
             //   ->setHeader('Content-Typ2e', 'application/json', true)
             ->sendResponse();
-        die();
     }
 
     /**

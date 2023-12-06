@@ -93,7 +93,7 @@ class CartUpdate
      */
     public function process($data)
     {
-        echo('update');
+ //       echo('update');
         $params['body'] = $data;
         $response = $this->httpClient->doRequest(
             self::CART_UPDATE_ENDPOINT,
@@ -108,7 +108,7 @@ class CartUpdate
      */
     public function execute(CartInterface $quote)
     {
-        echo('update2');
+      //  echo('update2');
         try {
             $quote->collectTotals();
             $customer = $quote->getCustomer();
