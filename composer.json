@@ -1,8 +1,8 @@
 {
     "name": "fortvision/platform",
-    "description": "Fortvision Platform Extension. v1.01",
+    "description": "Fortvision Platform Extension. v1.0.1",
     "license": "Apache-2.0",
-    "version": "1.1.21",
+    "version": "1.1.22",
     "type":"magento2-module",
     "authors": [
         {
