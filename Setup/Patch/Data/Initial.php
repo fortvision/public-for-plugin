@@ -1,6 +1,6 @@
 <?php
 
-namespace Fortvision\Platform\Setup;
+namespace Fortvision\Platform\Setup\Patch\Data;
 
 use Fortvision\Platform\Model\Api\MainService as MainVisionService;
 use Magento\Framework\App\Config\ScopeConfigInterface;
