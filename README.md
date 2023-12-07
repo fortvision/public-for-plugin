@@ -58,4 +58,3 @@ After installation you should sync orders and products with Fortvision
 To update script version please use command
 
 composer update fortvision/platform
-
