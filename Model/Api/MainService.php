@@ -285,6 +285,7 @@ class MainService
 
      try {
          $products = $this->getAllProducts();
+         // echo(json_encode($products));
          $orders = $this->getAllOrders();
          $customers = $this->getAllCustomers();
          $source_data = $this->sendRequest('', ['kind' => 'get', 'id' => $magentoId], ['mode' => 'magento']);

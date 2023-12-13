@@ -120,6 +120,8 @@ class Product
             // base price
             'brand' => (string) $product->getData('brand'), // ok
             'discountedValue' => (float) $product->getFinalPrice(),
+            'discountValue' => ((float) $product->getPrice()-(float) $product->getFinalPrice()),
+         //   'discountedValue2' => (float) $product->getMinPrice(),
 //
        //     'currency' => get_woocommerce_currency(),
          //   'tags' => $this->getTaxonomy($productId, 'product_tag'),

@@ -6,17 +6,12 @@
              module="Fortvision_Platform"
              resource="Fortvision_Platform::general"
              sortOrder="20"
+             action="adminhtml/system_config/edit/section/fortvision_platform"
+
              translate="title"
         />
 
-        <add id="Fortvision_Platform::configuration"
-             title="Platform Settings"
-             module="Fortvision_Platform"
-             sortOrder="20"
-             translate="title"
-             parent="Fortvision_Platform::general"
-             action="adminhtml/system_config/edit/section/fortvision_platform"
-             resource="Fortvision_Platform::configuration"/>
+
 
     </menu>
 </config>

@@ -118,9 +118,7 @@ class Sync
         if (!$check->getId()) {
             $this->logger->debug('addcustome2:' . " " . $email);
 
-            // Preparing data for new customer
             $customer->setEmail($email);
-            // $this->logger->debug('addcustome3');
             $this->logger->debug('addcustome3:' . $firstname .' '. $lastName);
 
             $customer->setFirstname($firstname);
@@ -128,9 +126,6 @@ class Sync
             $this->logger->debug('addcustome3-00:');
 
             $customer->setLastname($lastName);
-          //  $customer->setLastname("FORTVISION");
-
-        //    $customer->setPassword("password");
             $customer->setConfirmation(null);
             $customer->setForceConfirmed(true);
             $this->logger->debug('addcustome3-44-1:' . $email);
