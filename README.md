@@ -16,6 +16,10 @@ php bin/magento cache:clean
 
 php bin/magento cache:flush
 
+OR ONE LINER
+composer require fortvision/platform && php bin/magento setup:upgrade && php bin/magento setup:di:compile && php bin/magento cache:clean && php bin/magento cache:flush
+
+
 
 
 **How To Install an Extension via .zip file**
