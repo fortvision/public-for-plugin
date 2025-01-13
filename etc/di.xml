@@ -20,6 +20,9 @@
                 <item name="fortvision_export_historical" xsi:type="object">
                     Fortvision\Platform\Console\Command\Sync
                 </item>
+                <item name="fortvision_export_sync" xsi:type="object">
+                    Fortvision\Platform\Console\Command\FortvisionStatus
+                </item>
             </argument>
         </arguments>
     </type>

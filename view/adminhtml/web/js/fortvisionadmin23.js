@@ -22,23 +22,8 @@ const checkIfInitFortvision = () => {
             const addCode= `<tr><td colspan="4"><suprematik-page magentoid="${magentoid}" settings="${window.btoa(JSON.stringify({magentoid: magentoid}))}"></suprematik-page></td></tr>`+
                 (ifenabledcode? `<table style="width:100%"><tr>${ifenabledcode}</tr></table>`:'')
             magentoLine.parentElement.parentElement.innerHTML=addCode
-
         }
     }
-  //  const value = document.getElementById('row_fortvision_platform_general_magento_id'
-
-///    document.getElementById('row_fortvision_platform_general_magento_id').querySelector('.control-value').innerText
-  //  let val = '{}'
-   // if (value) val = value.value
-/*    if (sel && sel.parentElement && sel.parentElement.parentElement && sel.parentElement.parentElement.parentElement) {
-        const src=sel.parentElement.parentElement.parentElement.parentElement.innerHTML
-        const addCode= `<suprematik-page settings="${window.btoa(JSON.stringify({values: val}))}"></suprematik-page>` +
-            (ifenabledcode? `<table style="width:100%"><tr>${ifenabledcode}</tr></table>`:'')
-  //      sel.parentElement.parentElement.parentElement.parentElement.innerHTML =addCode
-    //    console.log('SOURCE',ifenabledcode,src,addCode )
-
-    } */
- //   console.log('AVV100', sel, value);
 }
 
 document.onreadystatechange = () => {

@@ -279,6 +279,38 @@ class MainService
         return false;
     }
 
+ public function getDataRegular($m4) {
+     $magentoId = $this->flagManager->getFlagData('fortvision_magento_id');
+     $source_data = $this->sendRequest('', ['kind' => 'get', 'id' => $magentoId], ['mode' => 'magento']);
+    // $m4 = $mv->getList();
+     $m5 = $this->getMagentoWebsites();
+    $data = json_decode($source_data['Response']);
+
+     return ["mid"=>$magentoId,"current"=>$m5, "sd"=>"wewe","data"=>$data];
+
+ }/*
+
+    public function getMagentoWebsites()
+    {
+        $stores = $this->storeManager->getStores();
+        $websites = $this->storeManager->getWebsites();
+        $storeManager =  $this->_objectManager->get('Magento\Store\Model\StoreManagerInterface');
+
+        $datadata=[];
+        foreach($websites as $website){
+            foreach($website->getStores() as $store){
+                $wedsiteId = $website->getId();
+                $wedsiteName = $website->getName();
+                $storeObj = $storeManager->getStore($store);
+                $storeId = $storeObj->getId();
+                $storeName = $storeObj->getName();
+                $url = $storeObj->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_WEB);
+                $datadata[]=['siteId'=>$wedsiteId,'sitename'=>$wedsiteName,'storeName'=>$storeName,'storeId'=>$storeId,"url"=>$url];
+            }
+        }
+        return $datadata;
+
+    }*/
  public function doSyncDataRegular()
  {
      $magentoId = $this->flagManager->getFlagData('fortvision_magento_id');

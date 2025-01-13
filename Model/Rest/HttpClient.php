@@ -116,11 +116,13 @@ class HttpClient
 
         try {
             $res=$client->post($requestedUrl, [ 'json'=>$body])->getBody()->getContents();
-         //   $this->logger->debug("res=>".($res));
-            return json_decode($res, true);
+         ///  $this->logger->debug("res=>".($res));
+           $result = json_decode($res, true);
+
+            return $result;
         }
         catch (Exception $e) {
-            $this->logger->debug($e->getMessage());
+            $this->logger->debug("dcq:".$e->getMessage());
         }
     }
 

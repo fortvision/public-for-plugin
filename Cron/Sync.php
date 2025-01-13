@@ -83,7 +83,7 @@ class Sync
             $this->logger->debug('isValidName2:');
 
             if (preg_match(self::PATTERN_NAME, $nameValue, $matches)) {
-                $this->logger->debug('isValidName3:'.$nameValue.' '.($matches[0] == $nameValue?'yes':'no'));
+                $this->logger->debug('isValidName3:' . $nameValue . ' ' . ($matches[0] == $nameValue ? 'yes' : 'no'));
 
                 return $matches[0] == $nameValue;
             }
@@ -91,9 +91,47 @@ class Sync
 
         return true;
     }
-    public function addCustomer($data, $publishers) {
-        $websiteid = $this->getWebSiteIdByPublisherId($data['publisherId'],$publishers);
-                $this->logger->debug('addcustomer0:'.$websiteid." ".json_encode($data));
+
+    public function addCoupon($data)
+    {
+        try {
+            $this->logger->debug('addCouponMMMM'.json_encode($data));
+
+            $shoppingCartPriceRule = $this->objectManager->create('Magento\SalesRule\Model\Rule');
+            foreach ($data['coupons'] as $code) {
+                $shoppingCartPriceRule
+                    ->setFromDate(date('Y-m-d', time()))
+                    ->setToDate('')
+                    ->setUsesPerCustomer(1)
+                    // ->setCustomerGroupIds(array('0','1','2','3',))
+                    ->setIsActive(1)
+                    ->setSimpleAction(0) // ?
+                    ->setDiscountAmount($data['discountPercentage']) // ?
+                    ->setDiscountQty(1)
+                    ->setApplyToShipping(0)
+                    ->setTimesUsed(0)
+                    ->setCouponType(2)
+                    ->setCouponCode($code)
+                    ->setUsesPerCoupon(NULL);
+                if (isset($data['siteId'])) $shoppingCartPriceRule->setWebsiteIds(array($data['siteId'])); ///!
+                /// if (isset($data['storeId'])) $shoppingCartPriceRule->setStoreId(array($data['storeId'])); ///!
+
+                $shoppingCartPriceRule->save();
+                $this->logger->debug('Coupon added:'.$code);
+
+            }
+            return true;
+        }
+        catch (\Exception $e) {
+            $this->logger->debug($e->getMessage());
+            return false;
+        }
+    }
+
+    public function addCustomer($data, $publishers)
+    {
+        $websiteid = $this->getWebSiteIdByPublisherId($data['publisherId'], $publishers);
+        $this->logger->debug('addcustomer0:' . $websiteid . " " . json_encode($data));
 
         $email = $data['email'];
         if (!$email || $email==='no-email') return false;
@@ -222,17 +260,20 @@ class Sync
     public function execute()
     {
         try {
-
             $magentoid  =  $this->generalSettings->getMagentoId();
          ///   $magentoid = '3e044f36e84b6c6b897ace6b36d351feb9518744676985f3ad797400608b088d'; //debug!
-            $this->logger->debug('dododo'.$magentoid);
+            // $this->logger->debug('dododo'.$magentoid);
 
             $answer=$this->httpClient->doCloudflareRequest(['kind'=>'getfromqueue', 'mid'=>$magentoid]);
-            $completed=[];
-            if (isset($answer) && isset($answer['result']) && isset($answer['result']['queue'])) {
-                $currentQueue = $answer['result']['queue'];
+          //  $completed=[];
+            // $this->logger->debug('AAAA'.json_encode($answer));
 
+            if (isset($answer) && isset($answer['result']) && isset($answer['result']['queue'])) {
+
+                $currentQueue = $answer['result']['queue'];
+                // $this->logger->debug("CCC".json_encode($currentQueue));
                 foreach ($currentQueue as $task) {
+                    // $this->logger->debug("DDD".json_encode($task['kind']));
 
                     switch ($task['kind']) {
                         case 'resync':
@@ -244,17 +285,20 @@ class Sync
                             $this->sendLog();
                             // TODO SEND LOGS
                             $completed[]=$task['id'];
-
                             break;
 
                         case 'subs':
                             //$this->logger->debug('subs'.json_encode($task));
-
                             $this->subsunsubs($task,$answer['result']['publishers']);
                             if (isset($task['id']))  $completed[]=$task['id'];
-
-
                             $this->logger->debug('subs2!!!');
+                            $completed[]=$task['id'];
+
+                            break;
+
+                        case 'addcoupon':
+                            $result = $this->addCoupon($task);
+
                             $completed[]=$task['id'];
 
                             break;

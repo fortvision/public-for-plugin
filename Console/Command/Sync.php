@@ -57,16 +57,7 @@ class Sync extends Command
         StoreManager                                       $StoreManager,
         \Magento\Framework\ObjectManagerInterface $objectManager,
 
-        GeneralSettings                                    $generalSettings,/*
-        ProductCollectionFactory $productCollectionFactory,
-        \Magento\Catalog\Model\ProductRepository $productRepository,
-        \Magento\Framework\Api\SearchCriteriaInterface $criteria,
-        \Magento\Framework\Api\Search\FilterGroup $filterGroup,
-        \Magento\Sales\Model\ResourceModel\Order\CollectionFactory $orderCollectionFactory,
-        \Magento\Framework\Api\FilterBuilder $filterBuilder,
-        \Magento\Catalog\Model\Product\Attribute\Source\Status $productStatus,
-        \Magento\Catalog\Model\Product\Visibility $productVisibility,
-        ProductDTO $productDto, */
+        GeneralSettings                                    $generalSettings,
         MainVisionService                                  $mainVisionService,
 
         //    \Fortvision\Platform\Service\MainVision $mainVision,
